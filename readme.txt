@@ -1,4 +1,4 @@
-=== __TRIBE_BASE__ Extension: __TRIBE_NAME__ ===
+=== Events Aggregator Extension: Additional Options ===
 Contributors: ModernTribe
 Donate link: http://m.tri.be/29
 Tags: events, calendar
