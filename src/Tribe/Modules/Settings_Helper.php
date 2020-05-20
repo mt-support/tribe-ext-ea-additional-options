@@ -1,5 +1,5 @@
 <?php
-namespace Tribe\Extensions\__TRIBE_NAMESPACE__;
+namespace Tribe\Extensions\EA_Additional_Options;
 
 use Tribe__Main;
 
