@@ -84,7 +84,7 @@ if (
                 $this->opts_prefix . 'link_directly_to_website_url' => array(
                     'type' => 'radio',
                     'label' => esc_html__('Link Directly to Website URL, Bypassing Default Event Page', 'tribe-ext-ea-additional-options'),
-                    'tooltip' => esc_html__('Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field.', 'tribe-ext-ea-additional-options'),
+                    'tooltip' => esc_html__('Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field. ** NOTE: This setting only affects legacy views and will not work in the upgraded views. **', 'tribe-ext-ea-additional-options'),
                     'validation_type' => 'options',
                     'default' => 'no',
                     'options' => array(
@@ -128,6 +128,15 @@ if (
             add_filter('tribe_aggregator_url_import_range_options', array($this, 'add_other_url_options'));
 
             add_action('tribe_events_aggregator_import_form_preview_options', array($this, 'add_import_options'));
+
+            add_filter('tribe_get_event_link', array($this, 'filter_event_link'), 100, 2);
+
+            add_filter('tribe_aggregator_event_translate_service_data_field_map', array($this, 'filter_service_data_field_map'));
+
+            add_filter('tribe_aggregator_before_insert_event', array($this, 'filter_imported_event'), 10, 2);
+            add_filter('tribe_aggregator_before_save_event', array($this, 'filter_imported_event'), 10, 2);
+
+            add_filter('tribe_aggregator_import_submit_meta', array($this, 'filter_import_meta'), 10, 2);
         }
 
         /**
@@ -188,12 +197,29 @@ if (
             return $options;
         }
 
+        /**
+         * HTML for the additional options for individual imports
+         */
         public function add_import_options() {
+            $record = new stdClass;
+            if (!empty($_GET['id'])) {
+                $get_record = Tribe__Events__Aggregator__Records::instance()->get_by_post_id((int) $_GET['id']);
+                if (!tribe_is_error($get_record)) {
+                    $record = $get_record;
+                }
+            }
+            $selectedTimezone = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'timezone', true);
+            $selectedPrefix = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'prefix', true);
+            $prefixValue = empty($selectedPrefix) ? "" : $selectedPrefix;
             $tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
             $timezoneSelect = '<select name="aggregator[timezone]" id="tribe-ea-field-timezone" class="tribe-ea-field tribe-ea-dropdown tribe-ea-size-large">';
             $timezoneSelect .= '<option value="">Do not change the timezone.</option>';
             foreach ($tzlist as $tz) {
-                $timezoneSelect .= '<option value="' . esc_attr($tz) . '">' . esc_html($tz) . '</option>';
+                $timezoneSelect .= '<option value="' . esc_attr($tz) . '"';
+                if ($selectedTimezone == $tz) {
+                    $timezoneSelect .= ' selected';
+                }
+                $timezoneSelect .= '>' . esc_html($tz) . '</option>';
             }
             $timezoneSelect .= '</select>';
             ?>
@@ -210,7 +236,7 @@ if (
                 </div>
                 <div class="tribe-refine tribe-active">
                     <label for="tribe-ea-field-prefix"><?php esc_html_e('Event Title Prefix:', 'tribe-ext-ea-additional-options'); ?></label>
-                    <input id="tribe-ea-field-prefix" class="tribe-ea-field tribe-ea-size-large" type="text" />
+                    <input id="tribe-ea-field-prefix" name="aggregator[prefix]" class="tribe-ea-field tribe-ea-size-large" type="text" value="<?php echo esc_attr($prefixValue); ?>" />
                     <span
                         class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help"
                         data-bumpdown="<?php echo esc_attr__('Add text before the title of each event.', 'tribe-ext-ea-additional-options'); ?>"
@@ -221,7 +247,83 @@ if (
             <?php
         }
 
+        /**
+         * Checks website url setting and filters link
+         * 
+         * @param string $link
+         * @param int $postId
+         * @return string
+         */
+        public function filter_event_link($link, $postId) {
+            $filterLinkOpt = tribe_get_option($this->opts_prefix . 'link_directly_to_website_url');
+            if ($filterLinkOpt === 'yes') {
+                $website_url = tribe_get_event_website_url($postId);
+                if (!empty($website_url)) {
+                    $link = $website_url;
+                }
+            }
+            return $link;
+        }
+
+        public function filter_service_data_field_map($fieldMap) {
+            $lineBreakOpt = tribe_get_option($this->opts_prefix . 'retain_line_breaks');
+            if ($lineBreakOpt == 'yes') {
+                if (isset($fieldMap['description'])) {
+                    unset($fieldMap['description']);
+                }
+                $fieldMap['unsafe_description'] = 'post_content';
+            }
+            return $fieldMap;
+        }
+
+        /**
+         * Filters event info before being saved or updated
+         * 
+         * @param array $event
+         * @return array
+         */
+        public function filter_imported_event($event, $record) {
+            $meta = $record->meta;
+            $lineBreakOpt = tribe_get_option($this->opts_prefix . 'retain_line_breaks');
+            if ($lineBreakOpt == 'yes') {
+                $event['post_content'] = str_replace(['\\n', '\n', "\n", "\\n"], '<br>', $event['post_content']);
+            }
+            if(!empty($meta['prefix'])){
+                $event['post_title'] = $meta['prefix'] . ' ' . $event['post_title'];
+            }
+            if(!empty($meta['timezone'])){
+                if(!empty($event['EventAllDay']) && $event['EventAllDay'] == 'yes'){
+                    $event['EventTimezone'] = $meta['timezone'];
+                }else{
+                    date_default_timezone_set( "UTC" );
+                    $targetOffset = timezone_offset_get(timezone_open($meta['timezone']), new DateTime());
+                    $eventOffset = timezone_offset_get(timezone_open($event['EventTimezone']), new DateTime());
+                    $currTimezone = new DateTimeZone($event['EventTimezone']);
+                    $currStartDateTime = new DateTime($event['EventStartDate'] . ' ' . $event['EventStartHour'] . ':' . $event['EventStartMinute'], $currTimezone);
+                    $currEndDateTime = new DateTime($event['EventEndDate'] . ' ' . $event['EventEndHour'] . ':' . $event['EventEndMinute'], $currTimezone);
+                    $offsetDiff = intval($targetOffset) - intval($eventOffset);
+                    $targetInterval = DateInterval::createFromDateString((string) $offsetDiff . ' seconds');
+                    $currStartDateTime->add($targetInterval);
+                    $currEndDateTime->add($targetInterval);
+                    $event['EventStartDate'] = $currStartDateTime->format('Y-m-d');
+                    $event['EventStartHour'] = $currStartDateTime->format('H');
+                    $event['EventStartMinute'] = $currStartDateTime->format('i');
+                    $event['EventEndDate'] = $currEndDateTime->format('Y-m-d');
+                    $event['EventEndHour'] = $currEndDateTime->format('H');
+                    $event['EventEndMinute'] = $currEndDateTime->format('i');
+                    $event['EventTimezone'] = $meta['timezone'];
+                }
+            }
+            return $event;
+        }
+
+        public function filter_import_meta($meta) {
+            $post_data = $_POST['aggregator'];
+            $meta['prefix'] = empty($post_data['prefix']) ? '' : sanitize_text_field($post_data['prefix']);
+            $meta['timezone'] = empty($post_data['timezone']) ? null : $post_data['timezone'];
+            return $meta;
+        }
+
     }
 
-    // end class
-} // end if class_exists check
+}
