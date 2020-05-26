@@ -293,7 +293,11 @@ if (
                     $utcTimezone = new DateTimeZone("UTC");
                     $targetOffset = timezone_offset_get(timezone_open($meta['timezone']), new DateTime('now', $utcTimezone));
                     $eventOffset = timezone_offset_get(timezone_open($event['EventTimezone']), new DateTime('now', $utcTimezone));
-                    $currTimezone = new DateTimeZone($event['EventTimezone']);
+                    try { 
+                         $currTimezone = new DateTimeZone($event['EventTimezone']);
+                    } catch ( \Exception $e ) {
+                        $currTimezone = $utcTimezone;
+                    }
                     $currStartDateTime = new DateTime($event['EventStartDate'] . ' ' . $event['EventStartHour'] . ':' . $event['EventStartMinute'], $currTimezone);
                     $currEndDateTime = new DateTime($event['EventEndDate'] . ' ' . $event['EventEndHour'] . ':' . $event['EventEndMinute'], $currTimezone);
                     $offsetDiff = intval($targetOffset) - intval($eventOffset);
