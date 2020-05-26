@@ -129,9 +129,15 @@ if (
 
             add_action('tribe_events_aggregator_import_form_preview_options', array($this, 'add_import_options'));
 
-            add_filter('tribe_get_event_link', array($this, 'filter_event_link'), 100, 2);
+            $filterLinkOpt = tribe_get_option($this->opts_prefix . 'link_directly_to_website_url');
+            if (tribe_is_truthy($filterLinkOpt)) {
+                add_filter('tribe_get_event_link', array($this, 'filter_event_link'), 100, 2);
+            }
 
-            add_filter('tribe_aggregator_event_translate_service_data_field_map', array($this, 'filter_service_data_field_map'));
+            $lineBreakOpt = tribe_get_option($this->opts_prefix . 'retain_line_breaks');
+            if (tribe_is_truthy($lineBreakOpt)) {
+                add_filter('tribe_aggregator_event_translate_service_data_field_map', array($this, 'filter_service_data_field_map'));
+            }
 
             add_filter('tribe_aggregator_before_insert_event', array($this, 'filter_imported_event'), 10, 2);
             add_filter('tribe_aggregator_before_save_event', array($this, 'filter_imported_event'), 10, 2);
@@ -152,7 +158,6 @@ if (
                 $idsToDelete = tribe_get_events([
                     'fields' => 'ids',
                     'posts_per_page' => -1,
-                    'post_type' => 'tribe_events',
                     'post_status' => 'publish',
                     'ends_after' => date('Y-m-d H:i:s', time()),
                     'meta_query' => [
@@ -203,7 +208,7 @@ if (
         public function add_import_options() {
             $record = new stdClass;
             if (!empty($_GET['id'])) {
-                $get_record = Tribe__Events__Aggregator__Records::instance()->get_by_post_id((int) $_GET['id']);
+                $get_record = Tribe__Events__Aggregator__Records::instance()->get_by_post_id(absint($_GET['id']));
                 if (!tribe_is_error($get_record)) {
                     $record = $get_record;
                 }
@@ -215,11 +220,7 @@ if (
             $timezoneSelect = '<select name="aggregator[timezone]" id="tribe-ea-field-timezone" class="tribe-ea-field tribe-ea-dropdown tribe-ea-size-large">';
             $timezoneSelect .= '<option value="">Do not change the timezone.</option>';
             foreach ($tzlist as $tz) {
-                $timezoneSelect .= '<option value="' . esc_attr($tz) . '"';
-                if ($selectedTimezone == $tz) {
-                    $timezoneSelect .= ' selected';
-                }
-                $timezoneSelect .= '>' . esc_html($tz) . '</option>';
+                $timezoneSelect .= '<option value="' . esc_attr($tz) . '" ' . selected($selectedTimezone, $tz, false) . '>' . esc_html($tz) . '</option>';
             }
             $timezoneSelect .= '</select>';
             ?>
@@ -227,7 +228,7 @@ if (
                 <h4>Additional Options</h4>
                 <div class="tribe-refine tribe-active">
                     <label for="tribe-ea-field-timezone"><?php esc_html_e('Force Timezone:', 'tribe-ext-ea-additional-options'); ?></label>
-                    <?php echo $timezoneSelect; ?>
+                    <?php echo esc_html($timezoneSelect); ?>
                     <span
                         class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help"
                         data-bumpdown="<?php echo esc_attr__('You can choose to change the timezones of all events in this import. The times will be modified to match the chosen timezone.', 'tribe-ext-ea-additional-options'); ?>"
@@ -255,24 +256,18 @@ if (
          * @return string
          */
         public function filter_event_link($link, $postId) {
-            $filterLinkOpt = tribe_get_option($this->opts_prefix . 'link_directly_to_website_url');
-            if ($filterLinkOpt === 'yes') {
-                $website_url = tribe_get_event_website_url($postId);
-                if (!empty($website_url)) {
-                    $link = $website_url;
-                }
+            $website_url = tribe_get_event_website_url($postId);
+            if (!empty($website_url)) {
+                return $website_url;
             }
             return $link;
         }
 
         public function filter_service_data_field_map($fieldMap) {
-            $lineBreakOpt = tribe_get_option($this->opts_prefix . 'retain_line_breaks');
-            if ($lineBreakOpt == 'yes') {
-                if (isset($fieldMap['description'])) {
-                    unset($fieldMap['description']);
-                }
-                $fieldMap['unsafe_description'] = 'post_content';
+            if (isset($fieldMap['description'])) {
+                unset($fieldMap['description']);
             }
+            $fieldMap['unsafe_description'] = 'post_content';
             return $fieldMap;
         }
 
@@ -285,19 +280,19 @@ if (
         public function filter_imported_event($event, $record) {
             $meta = $record->meta;
             $lineBreakOpt = tribe_get_option($this->opts_prefix . 'retain_line_breaks');
-            if ($lineBreakOpt == 'yes') {
+            if (tribe_is_truthy($lineBreakOpt)) {
                 $event['post_content'] = str_replace(['\\n', '\n', "\n", "\\n"], '<br>', $event['post_content']);
             }
-            if(!empty($meta['prefix'])){
+            if (!empty($meta['prefix'])) {
                 $event['post_title'] = $meta['prefix'] . ' ' . $event['post_title'];
             }
-            if(!empty($meta['timezone'])){
-                if(!empty($event['EventAllDay']) && $event['EventAllDay'] == 'yes'){
+            if (!empty($meta['timezone'])) {
+                if (tribe_is_truthy($event['EventAllDay'])) {
                     $event['EventTimezone'] = $meta['timezone'];
-                }else{
-                    date_default_timezone_set( "UTC" );
-                    $targetOffset = timezone_offset_get(timezone_open($meta['timezone']), new DateTime());
-                    $eventOffset = timezone_offset_get(timezone_open($event['EventTimezone']), new DateTime());
+                } else {
+                    $utcTimezone = new DateTimeZone("UTC");
+                    $targetOffset = timezone_offset_get(timezone_open($meta['timezone']), new DateTime('now', $utcTimezone));
+                    $eventOffset = timezone_offset_get(timezone_open($event['EventTimezone']), new DateTime('now', $utcTimezone));
                     $currTimezone = new DateTimeZone($event['EventTimezone']);
                     $currStartDateTime = new DateTime($event['EventStartDate'] . ' ' . $event['EventStartHour'] . ':' . $event['EventStartMinute'], $currTimezone);
                     $currEndDateTime = new DateTime($event['EventEndDate'] . ' ' . $event['EventEndHour'] . ':' . $event['EventEndMinute'], $currTimezone);
@@ -318,9 +313,9 @@ if (
         }
 
         public function filter_import_meta($meta) {
-            $post_data = $_POST['aggregator'];
+            $post_data = empty($_POST['aggregator']) ? [] : $_POST['aggregator'];
             $meta['prefix'] = empty($post_data['prefix']) ? '' : sanitize_text_field($post_data['prefix']);
-            $meta['timezone'] = empty($post_data['timezone']) ? null : $post_data['timezone'];
+            $meta['timezone'] = empty($post_data['timezone']) ? null : sanitize_text_field($post_data['timezone']);
             return $meta;
         }
 
