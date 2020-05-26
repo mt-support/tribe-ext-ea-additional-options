@@ -1,0 +1,129 @@
+# Copyright (C) 2020 Modern Tribe, Inc.
+# This file is distributed under the same license as the Events Aggregator Extension: Additional Options plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Events Aggregator Extension: Additional Options 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tribe-ext-ea-additional-options\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-05-25T18:31:10+02:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.4.0\n"
+"X-Domain: tribe-ext-ea-additional-options\n"
+
+#. Plugin Name of the plugin
+msgid "Events Aggregator Extension: Additional Options"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://theeventscalendar.com/extensions/ea-additional-options/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Adds extra options to Event Aggregator settings and imports"
+msgstr ""
+
+#. Author of the plugin
+msgid "Modern Tribe, Inc."
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://m.tri.be/1971"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:70
+msgid "Additional Options"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:74
+msgid "Delete Duplicate/Removed Events"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:75
+msgid "By default, the Events Aggregator does not delete events that are removed from the import source. Check this box to delete these types of events. This will also remove duplicates in the case where the source changes the unique identifier for an event."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:79
+msgid "Do not delete duplicate/removed events."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:80
+msgid "Send duplicate/removed events to trash."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:81
+msgid "Permanently delete duplicate/removed events."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:86
+msgid "Link Directly to Website URL, Bypassing Default Event Page"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:87
+msgid "Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field. ** NOTE: This setting only affects legacy views and will not work in the upgraded views. **"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:91
+msgid "Link to the default single event page."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:92
+msgid "Link directly to the event website URL"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:97
+msgid "Retain Line Breaks in Event Description"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:98
+msgid "Some import sources allow for linebreaks. Choose whether to remove linebreaks or keep them."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:102
+msgid "Remove all line breaks from event descriptions."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:103
+msgid "Retain all line breaks within event descirptions."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:186
+msgid "Six months"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:187
+msgid "six months"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:190
+msgid "One year"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:191
+msgid "one year"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:194
+msgid "Two years"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:195
+msgid "two years"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:229
+msgid "Force Timezone:"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:233
+msgid "You can choose to change the timezones of all events in this import. The times will be modified to match the chosen timezone."
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:238
+msgid "Event Title Prefix:"
+msgstr ""
+
+#: tribe-ext-ea-additional-options.php:242
+msgid "Add text before the title of each event."
+msgstr ""
