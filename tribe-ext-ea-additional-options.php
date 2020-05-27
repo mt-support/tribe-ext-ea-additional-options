@@ -72,7 +72,7 @@ if (
                 $this->opts_prefix . 'delete_duplicate_removed_events' => array(
                     'type' => 'radio',
                     'label' => esc_html__('Delete Duplicate/Removed Events', 'tribe-ext-ea-additional-options'),
-                    'tooltip' => esc_html__('By default, the Events Aggregator does not delete events that are removed from the import source. Check this box to delete these types of events. This will also remove duplicates in the case where the source changes the unique identifier for an event.', 'tribe-ext-ea-additional-options'),
+                    'tooltip' => esc_html__('Check this box to delete events that are removed from the import source. This will also remove duplicates in the case where the source changes the unique identifier for an event. ** NOTE: If your "Event Update Authority" setting is "Do not re-import events...", this setting will have no effect.', 'tribe-ext-ea-additional-options'),
                     'validation_type' => 'options',
                     'default' => 'no',
                     'options' => array(
@@ -107,7 +107,7 @@ if (
 
             $setting_helper->add_fields(
                     $fields, 'imports', // not the 'event-tickets' ("Tickets" tab) because it doesn't exist without Event Tickets
-                    'import-defaults-update_authority', true
+                    'tribe_aggregator_disable', false
             );
         }
 
@@ -120,8 +120,9 @@ if (
 
             add_action('admin_init', array($this, 'add_settings'));
 
+            $import_setting = tribe_get_option( 'tribe_aggregator_default_update_authority', Tribe__Events__Aggregator__Settings::$default_update_authority );
             $deletionSetting = tribe_get_option($this->opts_prefix . 'delete_duplicate_removed_events');
-            if (!empty($deletionSetting) && $deletionSetting !== 'no') {
+            if ('retain' !== $import_setting && !empty($deletionSetting) && $deletionSetting !== 'no') {
                 add_action('save_post_tribe-ea-record', array($this, 'record_finalized'), 10, 2);
             }
 
@@ -143,6 +144,8 @@ if (
             add_filter('tribe_aggregator_before_save_event', array($this, 'filter_imported_event'), 10, 2);
 
             add_filter('tribe_aggregator_import_submit_meta', array($this, 'filter_import_meta'), 10, 2);
+
+            add_filter('tribe_events_aggregator_tabs_new_handle_import_finalize', array($this, 'store_import_meta'), 10, 2);
         }
 
         /**
@@ -207,20 +210,22 @@ if (
          */
         public function add_import_options() {
             $record = new stdClass;
+            $selectedTimezone = '';
+            $selectedPrefix = '';
             if (!empty($_GET['id'])) {
                 $get_record = Tribe__Events__Aggregator__Records::instance()->get_by_post_id(absint($_GET['id']));
                 if (!tribe_is_error($get_record)) {
                     $record = $get_record;
+                    $selectedTimezone = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'timezone', true);
+                    $selectedPrefix = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'prefix', true);
                 }
             }
-            $selectedTimezone = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'timezone', true);
-            $selectedPrefix = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'prefix', true);
             $prefixValue = empty($selectedPrefix) ? "" : $selectedPrefix;
             $tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
             $timezoneSelect = '<select name="aggregator[timezone]" id="tribe-ea-field-timezone" class="tribe-ea-field tribe-ea-dropdown tribe-ea-size-large">';
             $timezoneSelect .= '<option value="">Do not change the timezone.</option>';
             foreach ($tzlist as $tz) {
-                $timezoneSelect .= '<option value="' . esc_attr($tz) . '" ' . selected($selectedTimezone, $tz, false) . '>' . esc_html($tz) . '</option>';
+                $timezoneSelect .= '<option value="' . esc_attr($tz) . '" ' . selected($selectedTimezone, $tz, false) . '>' . esc_html(str_replace('_', ' ', $tz)) . '</option>';
             }
             $timezoneSelect .= '</select>';
             ?>
@@ -228,7 +233,7 @@ if (
                 <h4>Additional Options</h4>
                 <div class="tribe-refine tribe-active">
                     <label for="tribe-ea-field-timezone"><?php esc_html_e('Force Timezone:', 'tribe-ext-ea-additional-options'); ?></label>
-                    <?php echo esc_html($timezoneSelect); ?>
+                    <?php echo $timezoneSelect; ?>
                     <span
                         class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help"
                         data-bumpdown="<?php echo esc_attr__('You can choose to change the timezones of all events in this import. The times will be modified to match the chosen timezone.', 'tribe-ext-ea-additional-options'); ?>"
@@ -283,7 +288,7 @@ if (
             if (tribe_is_truthy($lineBreakOpt)) {
                 $event['post_content'] = str_replace(['\\n', '\n', "\n", "\\n"], '<br>', $event['post_content']);
             }
-            if (!empty($meta['prefix'])) {
+            if (!empty($meta['prefix']) && strpos($event['post_title'], $meta['prefix']) !== 0) {
                 $event['post_title'] = $meta['prefix'] . ' ' . $event['post_title'];
             }
             if (!empty($meta['timezone'])) {
@@ -293,9 +298,9 @@ if (
                     $utcTimezone = new DateTimeZone("UTC");
                     $targetOffset = timezone_offset_get(timezone_open($meta['timezone']), new DateTime('now', $utcTimezone));
                     $eventOffset = timezone_offset_get(timezone_open($event['EventTimezone']), new DateTime('now', $utcTimezone));
-                    try { 
-                         $currTimezone = new DateTimeZone($event['EventTimezone']);
-                    } catch ( \Exception $e ) {
+                    try {
+                        $currTimezone = new DateTimeZone($event['EventTimezone']);
+                    } catch (\Exception $e) {
                         $currTimezone = $utcTimezone;
                     }
                     $currStartDateTime = new DateTime($event['EventStartDate'] . ' ' . $event['EventStartHour'] . ':' . $event['EventStartMinute'], $currTimezone);
@@ -319,8 +324,13 @@ if (
         public function filter_import_meta($meta) {
             $post_data = empty($_POST['aggregator']) ? [] : $_POST['aggregator'];
             $meta['prefix'] = empty($post_data['prefix']) ? '' : sanitize_text_field($post_data['prefix']);
-            $meta['timezone'] = empty($post_data['timezone']) ? null : sanitize_text_field($post_data['timezone']);
+            $meta['timezone'] = empty($post_data['timezone']) ? '' : sanitize_text_field($post_data['timezone']);
             return $meta;
+        }
+
+        public function store_import_meta($record, $data) {
+            $record->update_meta('prefix', empty($data['prefix']) ? null : $data['prefix'] );
+            $record->update_meta('timezone', empty($data['timezone']) ? null : $data['timezone'] );
         }
 
     }
