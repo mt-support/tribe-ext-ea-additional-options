@@ -229,7 +229,7 @@ if (
             $timezoneSelect .= '</select>';
             ?>
             <div class="tribe-default-settings">
-                <div class='tribe-dependent'  data-depends='#tribe-ea-field-origin' data-condition-not='["csv", "ics", "facebook-dev"]'>
+                <div class='tribe-dependent'  data-depends='#tribe-ea-field-origin' data-condition-not='["csv", "facebook-dev"]'>
                     <h4>Additional Options</h4>
                     <div class="tribe-refine tribe-active ">
                         <label for="tribe-ea-field-timezone"><?php esc_html_e('Force Timezone:', 'tribe-ext-ea-additional-options'); ?></label>
