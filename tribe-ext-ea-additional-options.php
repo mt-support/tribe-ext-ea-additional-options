@@ -348,7 +348,6 @@ if (
         }
         
         public function add_event_meta($event){
-            write_log($event);
             if(isset($event['EventEAImportId'])){
                 update_post_meta($event['ID'], '_tribe_aggregator_parent_record', $event['EventEAImportId']);
             }
