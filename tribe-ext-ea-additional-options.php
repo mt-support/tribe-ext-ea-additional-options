@@ -120,7 +120,7 @@ if (
 
             add_action('admin_init', array($this, 'add_settings'));
 
-            $import_setting = tribe_get_option( 'tribe_aggregator_default_update_authority', Tribe__Events__Aggregator__Settings::$default_update_authority );
+            $import_setting = tribe_get_option('tribe_aggregator_default_update_authority', Tribe__Events__Aggregator__Settings::$default_update_authority);
             $deletionSetting = tribe_get_option($this->opts_prefix . 'delete_duplicate_removed_events');
             if ('retain' !== $import_setting && !empty($deletionSetting) && $deletionSetting !== 'no') {
                 add_action('save_post_tribe-ea-record', array($this, 'record_finalized'), 10, 2);
@@ -135,10 +135,7 @@ if (
                 add_filter('tribe_get_event_link', array($this, 'filter_event_link'), 100, 2);
             }
 
-            $lineBreakOpt = tribe_get_option($this->opts_prefix . 'retain_line_breaks');
-            if (tribe_is_truthy($lineBreakOpt)) {
-                add_filter('tribe_aggregator_event_translate_service_data_field_map', array($this, 'filter_service_data_field_map'));
-            }
+            add_filter('tribe_aggregator_event_translate_service_data_field_map', array($this, 'filter_service_data_field_map'));
 
             add_filter('tribe_aggregator_before_insert_event', array($this, 'filter_imported_event'), 10, 2);
             add_filter('tribe_aggregator_before_save_event', array($this, 'filter_imported_event'), 10, 2);
@@ -146,6 +143,8 @@ if (
             add_filter('tribe_aggregator_import_submit_meta', array($this, 'filter_import_meta'), 10, 2);
 
             add_filter('tribe_events_aggregator_tabs_new_handle_import_finalize', array($this, 'store_import_meta'), 10, 2);
+            
+            add_action('tribe_aggregator_after_insert_post', array($this, 'add_event_meta'));
         }
 
         /**
@@ -166,8 +165,8 @@ if (
                     'meta_query' => [
                         'relation' => 'AND',
                         [
-                            'key' => '_tribe_aggregator_source',
-                            'value' => $source,
+                            'key' => '_tribe_aggregator_parent_record',
+                            'value' => $post->post_parent,
                             'compare' => '='
                         ],
                         [
@@ -230,24 +229,26 @@ if (
             $timezoneSelect .= '</select>';
             ?>
             <div class="tribe-default-settings">
-                <h4>Additional Options</h4>
-                <div class="tribe-refine tribe-active">
-                    <label for="tribe-ea-field-timezone"><?php esc_html_e('Force Timezone:', 'tribe-ext-ea-additional-options'); ?></label>
-                    <?php echo $timezoneSelect; ?>
-                    <span
-                        class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help"
-                        data-bumpdown="<?php echo esc_attr__('You can choose to change the timezones of all events in this import. The times will be modified to match the chosen timezone.', 'tribe-ext-ea-additional-options'); ?>"
-                        data-width-rule="all-triggers"
-                        ></span>
-                </div>
-                <div class="tribe-refine tribe-active">
-                    <label for="tribe-ea-field-prefix"><?php esc_html_e('Event Title Prefix:', 'tribe-ext-ea-additional-options'); ?></label>
-                    <input id="tribe-ea-field-prefix" name="aggregator[prefix]" class="tribe-ea-field tribe-ea-size-large" type="text" value="<?php echo esc_attr($prefixValue); ?>" />
-                    <span
-                        class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help"
-                        data-bumpdown="<?php echo esc_attr__('Add text before the title of each event.', 'tribe-ext-ea-additional-options'); ?>"
-                        data-width-rule="all-triggers"
-                        ></span>
+                <div class='tribe-dependent'  data-depends='#tribe-ea-field-origin' data-condition-not='["csv", "facebook-dev"]'>
+                    <h4>Additional Options</h4>
+                    <div class="tribe-refine tribe-active ">
+                        <label for="tribe-ea-field-timezone"><?php esc_html_e('Force Timezone:', 'tribe-ext-ea-additional-options'); ?></label>
+                        <?php echo $timezoneSelect; ?>
+                        <span
+                            class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help"
+                            data-bumpdown="<?php echo esc_attr__('You can choose to change the timezones of all events in this import. The times will be modified to match the chosen timezone.', 'tribe-ext-ea-additional-options'); ?>"
+                            data-width-rule="all-triggers"
+                            ></span>
+                    </div>
+                    <div class="tribe-refine tribe-active tribe-dependent">
+                        <label for="tribe-ea-field-prefix"><?php esc_html_e('Event Title Prefix:', 'tribe-ext-ea-additional-options'); ?></label>
+                        <input id="tribe-ea-field-prefix" name="aggregator[prefix]" class="tribe-ea-field tribe-ea-size-large" type="text" value="<?php echo esc_attr($prefixValue); ?>" />
+                        <span
+                            class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help"
+                            data-bumpdown="<?php echo esc_attr__('Add text before the title of each event.', 'tribe-ext-ea-additional-options'); ?>"
+                            data-width-rule="all-triggers"
+                            ></span>
+                    </div>
                 </div>
             </div>
             <?php
@@ -269,10 +270,15 @@ if (
         }
 
         public function filter_service_data_field_map($fieldMap) {
-            if (isset($fieldMap['description'])) {
-                unset($fieldMap['description']);
+            $lineBreakOpt = tribe_get_option($this->opts_prefix . 'retain_line_breaks');
+            if (tribe_is_truthy($lineBreakOpt)) {
+                if (isset($fieldMap['description'])) {
+                    unset($fieldMap['description']);
+                }
+                $fieldMap['unsafe_description'] = 'post_content';
             }
-            $fieldMap['unsafe_description'] = 'post_content';
+            $fieldMap['start_date_utc'] = 'EventUTCStartDate';
+            $fieldMap['end_date_utc'] = 'EventUTCEndDate';
             return $fieldMap;
         }
 
@@ -284,6 +290,7 @@ if (
          */
         public function filter_imported_event($event, $record) {
             $meta = $record->meta;
+            $event['EventEAImportId'] = $record->post->post_parent;
             $lineBreakOpt = tribe_get_option($this->opts_prefix . 'retain_line_breaks');
             if (tribe_is_truthy($lineBreakOpt)) {
                 $event['post_content'] = str_replace(['\\n', '\n', "\n", "\\n"], '<br>', $event['post_content']);
@@ -292,21 +299,28 @@ if (
                 $event['post_title'] = $meta['prefix'] . ' ' . $event['post_title'];
             }
             if (!empty($meta['timezone'])) {
-                if (tribe_is_truthy($event['EventAllDay'])) {
+                if (!empty($event['EventAllDay']) && tribe_is_truthy($event['EventAllDay'])) {
                     $event['EventTimezone'] = $meta['timezone'];
                 } else {
                     $utcTimezone = new DateTimeZone("UTC");
                     $targetOffset = timezone_offset_get(timezone_open($meta['timezone']), new DateTime('now', $utcTimezone));
-                    $eventOffset = timezone_offset_get(timezone_open($event['EventTimezone']), new DateTime('now', $utcTimezone));
-                    try {
-                        $currTimezone = new DateTimeZone($event['EventTimezone']);
-                    } catch (\Exception $e) {
-                        $currTimezone = $utcTimezone;
+                    if(!isset($event['EventUTCStartDate'])){
+                        $event['EventTimezone'] = str_replace('UTC', 'Etc/GMT', $event['EventTimezone']);
+                        $eventOffset = timezone_offset_get(timezone_open($event['EventTimezone']), new DateTime('now', $utcTimezone));
+                        try {
+                            $currTimezone = new DateTimeZone($event['EventTimezone']);
+                        } catch (\Exception $e) {
+                            $currTimezone = $utcTimezone;
+                        }
+                        $currStartDateTime = new DateTime($event['EventStartDate'] . ' ' . $event['EventStartHour'] . ':' . $event['EventStartMinute'], $currTimezone);
+                        $currEndDateTime = new DateTime($event['EventEndDate'] . ' ' . $event['EventEndHour'] . ':' . $event['EventEndMinute'], $currTimezone);
+                        $offsetDiff = intval($targetOffset) - intval($eventOffset);
+                        $targetInterval = DateInterval::createFromDateString((string) $offsetDiff . ' seconds');
+                    }else{
+                        $currStartDateTime = new DateTime($event['EventUTCStartDate'], $utcTimezone);
+                        $currEndDateTime = new DateTime($event['EventUTCEndDate'], $utcTimezone);
+                        $targetInterval = DateInterval::createFromDateString((string) $targetOffset . ' seconds');
                     }
-                    $currStartDateTime = new DateTime($event['EventStartDate'] . ' ' . $event['EventStartHour'] . ':' . $event['EventStartMinute'], $currTimezone);
-                    $currEndDateTime = new DateTime($event['EventEndDate'] . ' ' . $event['EventEndHour'] . ':' . $event['EventEndMinute'], $currTimezone);
-                    $offsetDiff = intval($targetOffset) - intval($eventOffset);
-                    $targetInterval = DateInterval::createFromDateString((string) $offsetDiff . ' seconds');
                     $currStartDateTime->add($targetInterval);
                     $currEndDateTime->add($targetInterval);
                     $event['EventStartDate'] = $currStartDateTime->format('Y-m-d');
@@ -331,6 +345,12 @@ if (
         public function store_import_meta($record, $data) {
             $record->update_meta('prefix', empty($data['prefix']) ? null : $data['prefix'] );
             $record->update_meta('timezone', empty($data['timezone']) ? null : $data['timezone'] );
+        }
+        
+        public function add_event_meta($event){
+            if(isset($event['EventEAImportId'])){
+                update_post_meta($event['ID'], '_tribe_aggregator_parent_record', $event['EventEAImportId']);
+            }
         }
 
     }

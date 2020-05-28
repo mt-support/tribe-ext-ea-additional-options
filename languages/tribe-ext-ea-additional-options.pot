@@ -88,27 +88,27 @@ msgstr ""
 msgid "Retain all line breaks within event descirptions."
 msgstr ""
 
-#: tribe-ext-ea-additional-options.php:194
+#: tribe-ext-ea-additional-options.php:193
 msgid "Six months"
 msgstr ""
 
-#: tribe-ext-ea-additional-options.php:195
+#: tribe-ext-ea-additional-options.php:194
 msgid "six months"
 msgstr ""
 
-#: tribe-ext-ea-additional-options.php:198
+#: tribe-ext-ea-additional-options.php:197
 msgid "One year"
 msgstr ""
 
-#: tribe-ext-ea-additional-options.php:199
+#: tribe-ext-ea-additional-options.php:198
 msgid "one year"
 msgstr ""
 
-#: tribe-ext-ea-additional-options.php:202
+#: tribe-ext-ea-additional-options.php:201
 msgid "Two years"
 msgstr ""
 
-#: tribe-ext-ea-additional-options.php:203
+#: tribe-ext-ea-additional-options.php:202
 msgid "two years"
 msgstr ""
 
