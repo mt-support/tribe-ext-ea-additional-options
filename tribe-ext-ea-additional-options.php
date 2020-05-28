@@ -71,7 +71,7 @@ if (
                 ),
                 $this->opts_prefix . 'delete_duplicate_removed_events' => array(
                     'type' => 'radio',
-                    'label' => esc_html__('Delete Duplicate/Removed Events', 'tribe-ext-ea-additional-options'),
+                    'label' => esc_html__('Delete Duplicate/Removed Events for Scheduled Imports', 'tribe-ext-ea-additional-options'),
                     'tooltip' => esc_html__('Check this box to delete events that are removed from the import source. This will also remove duplicates in the case where the source changes the unique identifier for an event. ** NOTE: If your "Event Update Authority" setting is "Do not re-import events...", this setting will have no effect.', 'tribe-ext-ea-additional-options'),
                     'validation_type' => 'options',
                     'default' => 'no',
