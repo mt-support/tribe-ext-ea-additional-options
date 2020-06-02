@@ -49,9 +49,8 @@ if (
          * This always executes even if the required plugins are not present.
          */
         public function construct() {
-            // Dependency requirements and class properties can be defined here.
-            // tested only with TEC 5.0+
-            $this->add_required_plugin('Tribe__Events__Main', '5.0');
+            // rolling back the version for loxi. loxi uses 4.9.7
+            $this->add_required_plugin('Tribe__Events__Main', '4.9.7');
         }
 
         /**
