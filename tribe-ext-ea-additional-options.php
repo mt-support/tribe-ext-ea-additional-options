@@ -117,6 +117,10 @@ if (
             // Load plugin textdomain
             load_plugin_textdomain('tribe-ext-ea-additional-options', false, basename(dirname(__FILE__)) . '/languages/');
 
+            if(is_multisite()){
+                add_filter('tribe_events_mu_defaults', array($this, 'mu_defaults'));
+            }
+
             add_action('admin_init', array($this, 'add_settings'));
 
             $import_setting = tribe_get_option('tribe_aggregator_default_update_authority', Tribe__Events__Aggregator__Settings::$default_update_authority);
@@ -350,6 +354,13 @@ if (
             if(isset($event['EventEAImportId'])){
                 update_post_meta($event['ID'], '_tribe_aggregator_parent_record', $event['EventEAImportId']);
             }
+        }
+        
+        public function mu_defaults($tribe_events_mu_defaults){
+            $tribe_events_mu_defaults[$this->opts_prefix . 'delete_duplicate_removed_events'] = 'no';
+            $tribe_events_mu_defaults[$this->opts_prefix . 'link_directly_to_website_url'] = 'no';
+            $tribe_events_mu_defaults[$this->opts_prefix . 'retain_line_breaks'] = 'no';
+            return $tribe_events_mu_defaults;
         }
 
     }
