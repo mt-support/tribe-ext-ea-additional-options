@@ -4,7 +4,7 @@
  * Plugin URI:        https://theeventscalendar.com/extensions/ea-additional-options/
  * GitHub Plugin URI: https://github.com/mt-support/tribe-ext-ea-additional-options
  * Description:       Adds extra options to Event Aggregator settings and imports
- * Version:           1.0.0
+ * Version:           1.0.1
  * Extension Class:   Tribe__Extension__EA_Additional_Options
  * Author:            Modern Tribe, Inc.
  * Author URI:        http://m.tri.be/1971
@@ -51,7 +51,7 @@ if (
         public function construct() {
             // Dependency requirements and class properties can be defined here.
             // tested only with TEC 5.0+
-            $this->add_required_plugin('Tribe__Events__Main', '5.0');
+            $this->add_required_plugin('Tribe__Events__Main', '5.1');
         }
 
         /**
