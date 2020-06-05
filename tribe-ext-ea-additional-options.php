@@ -127,6 +127,7 @@ if (
             }
 
             add_filter('tribe_aggregator_url_import_range_options', array($this, 'add_other_url_options'));
+            add_filter('tribe_aggregator_service_post_import_args', array($this, 'remove_end_param'));
 
             add_action('tribe_events_aggregator_import_form_preview_options', array($this, 'add_import_options'));
 
@@ -202,6 +203,19 @@ if (
                 'range' => __('two years', 'tribe-ext-ea-additional-options'),
             );
             return $options;
+        }
+
+        /**
+         * Removes the 'end' parameter for 'Other URL' imports
+         * 
+         * @param array $args
+         * @return array
+         */
+        public function remove_end_param($args){
+            if ($args['origin'] == 'url') {
+                unset($args['end']);
+            }
+            return $args;
         }
 
         /**
