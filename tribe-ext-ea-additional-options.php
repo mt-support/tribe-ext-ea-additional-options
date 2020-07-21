@@ -4,7 +4,7 @@
  * Plugin URI:        https://theeventscalendar.com/extensions/ea-additional-options/
  * GitHub Plugin URI: https://github.com/mt-support/tribe-ext-ea-additional-options
  * Description:       Adds extra options to Event Aggregator settings and imports
- * Version:           1.0.1
+ * Version:           1.2
  * Extension Class:   Tribe__Extension__EA_Additional_Options
  * Author:            Modern Tribe, Inc.
  * Author URI:        http://m.tri.be/1971
@@ -144,7 +144,7 @@ if (
             add_filter('tribe_aggregator_import_submit_meta', array($this, 'filter_import_meta'), 10, 2);
 
             add_filter('tribe_events_aggregator_tabs_new_handle_import_finalize', array($this, 'store_import_meta'), 10, 2);
-            
+
             add_action('tribe_aggregator_after_insert_post', array($this, 'add_event_meta'));
         }
 
@@ -185,7 +185,7 @@ if (
 
         /**
          * Adds extra options to the 'Other URL' settings
-         * 
+         *
          * @param type $options
          * @return array
          */
@@ -207,7 +207,7 @@ if (
 
         /**
          * Removes the 'end' parameter for 'Other URL' imports
-         * 
+         *
          * @param array $args
          * @return array
          */
@@ -225,15 +225,18 @@ if (
             $record = new stdClass;
             $selectedTimezone = '';
             $selectedPrefix = '';
+            $selectedLink = '';
             if (!empty($_GET['id'])) {
                 $get_record = Tribe__Events__Aggregator__Records::instance()->get_by_post_id(absint($_GET['id']));
                 if (!tribe_is_error($get_record)) {
                     $record = $get_record;
                     $selectedTimezone = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'timezone', true);
                     $selectedPrefix = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'prefix', true);
+                    $selectedLink = get_post_meta($record->post->ID, Tribe__Events__Aggregator__Record__Abstract::$meta_key_prefix . 'link', true);
                 }
             }
             $prefixValue = empty($selectedPrefix) ? "" : $selectedPrefix;
+            $linkValue = empty($linkPrefix) ? "" : $linkPrefix;
             $tzlist = DateTimeZone::listIdentifiers(DateTimeZone::ALL);
             $timezoneSelect = '<select name="aggregator[timezone]" id="tribe-ea-field-timezone" class="tribe-ea-field tribe-ea-dropdown tribe-ea-size-large">';
             $timezoneSelect .= '<option value="">Do not change the timezone.</option>';
@@ -263,6 +266,15 @@ if (
                             data-width-rule="all-triggers"
                             ></span>
                     </div>
+                    <div class="tribe-refine tribe-active tribe-dependent">
+                        <label for="tribe-ea-field-link"><?php esc_html_e('Event URL:', 'tribe-ext-ea-additional-options'); ?></label>
+                        <input id="tribe-ea-field-link" name="aggregator[link]" class="tribe-ea-field tribe-ea-size-large" type="text" value="<?php echo esc_attr($linkValue); ?>" />
+                        <span
+                            class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help"
+                            data-bumpdown="<?php echo esc_attr__('Replace the website URL for each event with this value.', 'tribe-ext-ea-additional-options'); ?>"
+                            data-width-rule="all-triggers"
+                            ></span>
+                    </div>
                 </div>
             </div>
             <?php
@@ -270,7 +282,7 @@ if (
 
         /**
          * Checks website url setting and filters link
-         * 
+         *
          * @param string $link
          * @param int $postId
          * @return string
@@ -298,7 +310,7 @@ if (
 
         /**
          * Filters event info before being saved or updated
-         * 
+         *
          * @param array $event
          * @return array
          */
@@ -311,6 +323,9 @@ if (
             }
             if (!empty($meta['prefix']) && strpos($event['post_title'], $meta['prefix']) !== 0) {
                 $event['post_title'] = $meta['prefix'] . ' ' . $event['post_title'];
+            }
+            if (!empty($meta['link'])) {
+                $event['EventURL'] = $meta['link'];
             }
             if (!empty($meta['timezone'])) {
                 if (!empty($event['EventAllDay']) && tribe_is_truthy($event['EventAllDay'])) {
@@ -352,15 +367,17 @@ if (
         public function filter_import_meta($meta) {
             $post_data = empty($_POST['aggregator']) ? [] : $_POST['aggregator'];
             $meta['prefix'] = empty($post_data['prefix']) ? '' : sanitize_text_field($post_data['prefix']);
+            $meta['link'] = empty($post_data['link']) ? '' : sanitize_text_field($post_data['link']);
             $meta['timezone'] = empty($post_data['timezone']) ? '' : sanitize_text_field($post_data['timezone']);
             return $meta;
         }
 
         public function store_import_meta($record, $data) {
             $record->update_meta('prefix', empty($data['prefix']) ? null : $data['prefix'] );
+            $record->update_meta('link', empty($data['link']) ? null : $data['link'] );
             $record->update_meta('timezone', empty($data['timezone']) ? null : $data['timezone'] );
         }
-        
+
         public function add_event_meta($event){
             if(isset($event['EventEAImportId'])){
                 update_post_meta($event['ID'], '_tribe_aggregator_parent_record', $event['EventEAImportId']);
