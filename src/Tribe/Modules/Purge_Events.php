@@ -2,72 +2,74 @@
 
 namespace Tribe\Extensions\EA_Additional_Options\Modules;
 
-use Tribe__Events__Aggregator__Records;
-use Tribe__Events__Aggregator__Settings;
-
-/**
- * Do the Settings.
- */
 class Purge_Events {
 
+	const IMPORT_HASH_META_KEY = '_tribe_aggregator_origin_import_hash_id';
+	const RECORD_META_KEY = '_tribe_aggregator_origin_record_id';
+
 	public function hook() {
+		add_action( 'tribe_aggregator_before_insert_posts', [ $this, 'purge_items' ], 10, 2 );
 		add_filter( 'tribe_aggregator_before_insert_event', [ $this, 'filter_imported_event' ], 10, 2 );
+		add_filter( 'tribe_aggregator_before_update_event', [ $this, 'filter_imported_event' ], 10, 2 );
 		add_action( 'tribe_aggregator_after_insert_post', [ $this, 'add_event_meta' ] );
-
-		$import_setting   = tribe_get_option( 'tribe_aggregator_default_update_authority', Tribe__Events__Aggregator__Settings::$default_update_authority );
-		$deletion_setting = tribe_get_option( Settings::PREFIX . 'delete_duplicate_removed_events' );
-
-		if ( 'retain' !== $import_setting && ! empty( $deletion_setting ) && $deletion_setting !== 'no' ) {
-			add_action( 'save_post_tribe-ea-record', [ $this, 'record_finalized' ], 10, 2 );
-		}
 	}
 
 	public function filter_imported_event( $event, $record ) {
-		$event['EventEAImportId'] = $record->post->post_parent;
+		if ( empty( $record ) || empty( $record->id ) || empty( $record->meta ) || empty( $record->meta['import_id'] ) ) {
+			return $event;
+		}
+
+		$event['ImportHashId'] = $record->meta['import_id'];
+		$event['RecordId']     = $record->id;
 
 		return $event;
 	}
 
 	public function add_event_meta( $event ) {
-		if ( empty( $event['EventEAImportId'] ) ) {
+		if ( empty( $event['ID'] ) ) {
 			return;
 		}
 
-		update_post_meta( $event['ID'], '_tribe_aggregator_parent_record', $event['EventEAImportId'] );
+		if ( ! empty( $event['ImportHashId'] ) ) {
+			update_post_meta( $event['ID'], self::IMPORT_HASH_META_KEY, $event['ImportHashId'] );
+		}
+
+		if ( ! empty( $event['RecordId'] ) ) {
+			update_post_meta( $event['ID'], self::RECORD_META_KEY, $event['RecordId'] );
+		}
 	}
 
-	/**
-	 * Process duplicate/removed events after import is complete.
-	 */
-	public function record_finalized( $post_id, $post ) {
-		if ( $post->post_status !== Tribe__Events__Aggregator__Records::$status->success ) {
+	public function purge_items( $items, $meta ) {
+
+		if ( empty( $meta['delete_upcoming_events'] ) || empty( $meta['import_id'] ) || empty( $meta['recent_child'] ) ) {
 			return;
 		}
 
-		$deletion_setting = tribe_get_option( Settings::PREFIX . 'delete_duplicate_removed_events' );
-		$pemanent_removal = $deletion_setting === 'permanent';
-		$ids_to_delete    = tribe_get_events( [
+		$events = tribe_get_events( [
 			'fields'         => 'ids',
-			'posts_per_page' => -1,
-			'post_status'    => 'publish',
-			'ends_after'     => date( 'Y-m-d H:i:s' ),
+			'posts_per_page' => apply_filters( 'tribe_ext_ea_additional_options_purge_items_per_page', 250 ),
+			'post_status'    => 'any',
+			'ends_after'     => empty( $meta['start'] )
+				? date( 'Y-m-d H:i:s' )
+				// The refine by date only has the Y-m-d values time is provided to follow the required format.
+				: $meta['start'] . ' 00:00:00',
 			'meta_query'     => [
-				'relation' => 'AND',
 				[
-					'key'     => '_tribe_aggregator_parent_record',
-					'value'   => $post->post_parent,
+					'key'     => self::IMPORT_HASH_META_KEY,
+					'value'   => $meta['import_id'],
 					'compare' => '=',
 				],
 				[
-					'key'     => '_tribe_aggregator_record',
-					'value'   => $post_id,
-					'compare' => '<',
+					'key'     => self::RECORD_META_KEY,
+					'value'   => $meta['recent_child'],
+					// Pull any record that is before the current one as recent_child is the record prior to the current one.
+					'compare' => '<=',
 				],
 			],
 		] );
 
-		foreach ( $ids_to_delete as $eventId ) {
-			tribe_delete_event( $eventId, $pemanent_removal );
+		foreach ( $events as $id ) {
+			tribe_delete_event( $id, true );
 		}
 	}
 }
