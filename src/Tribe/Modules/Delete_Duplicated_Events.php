@@ -5,13 +5,11 @@ namespace Tribe\Extensions\EA_Additional_Options\Modules;
 use Tribe__Events__Aggregator__Records;
 use Tribe__Events__Aggregator__Settings;
 
-/**
- * Do the Settings.
- */
 class Delete_Duplicated_Events {
 
 	public function hook() {
 		add_filter( 'tribe_aggregator_before_insert_event', [ $this, 'filter_imported_event' ], 10, 2 );
+		add_filter( 'tribe_aggregator_before_update_event', [ $this, 'filter_imported_event' ], 10, 2 );
 		add_action( 'tribe_aggregator_after_insert_post', [ $this, 'add_event_meta' ] );
 
 		$import_setting   = tribe_get_option( 'tribe_aggregator_default_update_authority', Tribe__Events__Aggregator__Settings::$default_update_authority );

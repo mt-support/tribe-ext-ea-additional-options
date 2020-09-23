@@ -8,6 +8,7 @@ class Line_Breaks {
 	public function hook() {
 		add_filter( 'tribe_aggregator_event_translate_service_data_field_map', [ $this, 'remove_line_breaks' ] );
 		add_filter( 'tribe_aggregator_before_insert_event', [ $this, 'filter_imported_event' ], 10, 2 );
+		add_filter( 'tribe_aggregator_before_update_event', [ $this, 'filter_imported_event' ], 10, 2 );
 		add_filter( 'tribe_aggregator_before_save_event', [ $this, 'filter_imported_event' ], 10, 2 );
 	}
 
