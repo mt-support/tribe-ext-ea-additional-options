@@ -43,5 +43,11 @@
 				data-width-rule="all-triggers"
 			></span>
 		</div>
+		<div class="tribe-refine tribe-active tribe-dependent">
+			<label for="tribe-ea-field-delete-upcoming-events">
+				<?php esc_html_e( 'Delete upcoming events before running the next import.', 'tribe-ext-ea-additional-options' ); ?>
+			</label>
+			<input name="aggregator[delete_upcoming_events]" id="tribe-ea-field-delete-upcoming-events" type="checkbox" <?php checked( $delete_upcoming ); ?>>
+		</div>
 	</div>
 </div>
