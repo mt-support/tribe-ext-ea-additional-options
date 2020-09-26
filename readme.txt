@@ -35,6 +35,11 @@ We're always interested in your feedback and our [Help Desk](https://support.the
 
 == Changelog ==
 
+= [1.2.0] 2020-09-23 =
+
+* Feature - Update plugin structure to follow the new Extension Layout.
+* Feature - Add option to purge (remove events) from a Schedule import.
+
 = [1.1.1] 2020-07-27 =
 
 * Bug Fix - Fixed typo that was preventing the Event URL field to be populated

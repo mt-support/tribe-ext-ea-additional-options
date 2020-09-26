@@ -4,10 +4,10 @@
  *
  * @since __TRIBE_VERSION__
  *
- * @package Tribe\Extensions\__TRIBE_NAMESPACE__;
+ * @package Tribe\Extensions\EA_Additional_Options;
  */
 
-namespace Tribe\Extensions\__TRIBE_NAMESPACE__;
+namespace Tribe\Extensions\EA_Additional_Options;
 
 use Tribe__PUE__Checker;
 
@@ -16,7 +16,7 @@ use Tribe__PUE__Checker;
  *
  * @since __TRIBE_VERSION__
  *
- * @package Tribe\Extensions\__TRIBE_NAMESPACE__;
+ * @package Tribe\Extensions\EA_Additional_Options;
  */
 class PUE extends \tad_DI52_ServiceProvider {
 

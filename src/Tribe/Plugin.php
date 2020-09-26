@@ -1,12 +1,12 @@
 <?php
-namespace Tribe\Extensions\__TRIBE_NAMESPACE__;
+namespace Tribe\Extensions\EA_Additional_Options;
 
 /**
  * Class Plugin
  *
  * @since   __TRIBE_VERSION__
  *
- * @package Tribe\Extensions\__TRIBE_NAMESPACE__
+ * @package Tribe\Extensions\EA_Additional_Options
  */
 class Plugin extends \tad_DI52_ServiceProvider {
 	/**
@@ -16,7 +16,7 @@ class Plugin extends \tad_DI52_ServiceProvider {
 	 *
 	 * @var string
 	 */
-	const VERSION = '__TRIBE_VERSION__';
+	const VERSION = '1.2.0';
 
 	/**
 	 * Stores the base slug for the plugin.
@@ -25,7 +25,7 @@ class Plugin extends \tad_DI52_ServiceProvider {
 	 *
 	 * @var string
 	 */
-	const SLUG = '__TRIBE_SLUG__';
+	const SLUG = 'ea_additional_options';
 
 	/**
 	 * Stores the base slug for the extension.
@@ -34,7 +34,7 @@ class Plugin extends \tad_DI52_ServiceProvider {
 	 *
 	 * @var string
 	 */
-	const FILE = TRIBE_EXTENSION___TRIBE_SLUG_CLEAN_UPPERCASE___FILE;
+	const FILE = EA_ADDITIONAL_OPTIONS_FILE;
 
 	/**
 	 * @since __TRIBE_VERSION__
@@ -84,11 +84,8 @@ class Plugin extends \tad_DI52_ServiceProvider {
 		// Start binds.
 
 
-
 		// End binds.
-
 		$this->container->register( Hooks::class );
-		$this->container->register( Assets::class );
 	}
 
 	/**
@@ -101,11 +98,7 @@ class Plugin extends \tad_DI52_ServiceProvider {
 	protected function check_plugin_dependencies() {
 		$this->register_plugin_dependencies();
 
-		if ( ! tribe_check_plugin( static::class ) ) {
-			return false;
-		}
-
-		return true;
+		return tribe_check_plugin( static::class );
 	}
 
 	/**

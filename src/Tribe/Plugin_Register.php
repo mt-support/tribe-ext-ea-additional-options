@@ -4,10 +4,10 @@
  *
  * @since __TRIBE_VERSION__
  *
- * @package Tribe\Extensions\__TRIBE_NAMESPACE__
+ * @package Tribe\Extensions\EA_Additional_Options
  */
 
-namespace Tribe\Extensions\__TRIBE_NAMESPACE__;
+namespace Tribe\Extensions\EA_Additional_Options;
 
 use Tribe__Abstract_Plugin_Register as Abstract_Plugin_Register;
 
@@ -16,7 +16,7 @@ use Tribe__Abstract_Plugin_Register as Abstract_Plugin_Register;
  *
  * @since   __TRIBE_VERSION__
  *
- * @package Tribe\Extensions\__TRIBE_NAMESPACE__
+ * @package Tribe\Extensions\EA_Additional_Options
  *
  * @see Tribe__Abstract_Plugin_Register For the plugin dependency manifest registration.
  */
