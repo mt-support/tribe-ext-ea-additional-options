@@ -48,14 +48,14 @@ class Purge_Events {
 		}
 
 		$events = tribe_get_events( [
-			'fields'         => 'ids',
-			'posts_per_page' => (int) apply_filters( 'tribe_aggregator_batch_size', Tribe__Events__Aggregator__Record__Queue_Processor::$batch_size ) * 3,
-			'post_status'    => 'any',
-			'starts_after'   => empty( $meta['start'] )
-				? date( 'Y-m-d H:i:s' )
+			'fields'             => 'ids',
+			'posts_per_page'     => (int) apply_filters( 'tribe_aggregator_batch_size', Tribe__Events__Aggregator__Record__Queue_Processor::$batch_size ) * 3,
+			'post_status'        => 'any',
+			'starts_on_or_after' => empty( $meta['start'] )
+				? date( 'Y-m-d 00:00:00' )
 				// The refine by date only has the Y-m-d values time is provided to follow the required format.
 				: $meta['start'] . ' 00:00:00',
-			'meta_query'     => [
+			'meta_query'         => [
 				[
 					'key'     => self::IMPORT_HASH_META_KEY,
 					'value'   => $meta['import_id'],
