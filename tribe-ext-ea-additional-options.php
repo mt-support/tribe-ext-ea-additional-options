@@ -21,9 +21,7 @@
  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *     GNU General Public License for more details.
  */
-
 define( 'EA_ADDITIONAL_OPTIONS_FILE', __FILE__ );
-
 
 function tribe_extension_ea_additional_options() {
 	// When we dont have autoloader from common we bail.
@@ -39,12 +37,12 @@ function tribe_extension_ea_additional_options() {
 	);
 
 	// Deactivates the plugin in case of the main class didn't autoload.
-	if ( ! class_exists( '\Tribe\Extensions\EA_Additional_Options\Plugin' ) ) {
+	if ( ! class_exists( \Tribe\Extensions\EA_Additional_Options\Plugin::class ) ) {
 		tribe_transient_notice(
-			'__TRIBE_SLUG__',
-			'<p>' . esc_html__( 'Couldn\'t properly load "__TRIBE_BASE__ Extension: EA_Additional_Options" the extension was deactivated.', '__TRIBE_SLUG__' ) . '</p>',
+			'ea_additional_options',
+			'<p>' . esc_html__( 'Couldn\'t properly load "Tribe__Events__Main Extension: EA_Additional_Options" the extension was deactivated.', 'tribe-ext-ea-additional-options' ) . '</p>',
 			[],
-			MINUTE_IN_SECONDS
+			1,
 		);
 
 		deactivate_plugins( __FILE__, true );
@@ -52,7 +50,7 @@ function tribe_extension_ea_additional_options() {
 		return;
 	}
 
-	tribe_register_provider( '\Tribe\Extensions\EA_Additional_Options\Plugin' );
+	tribe_register_provider( \Tribe\Extensions\EA_Additional_Options\Plugin::class );
 }
 
 // Loads after common is already properly loaded.

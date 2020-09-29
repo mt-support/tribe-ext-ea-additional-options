@@ -26,6 +26,7 @@ class Options {
 			$this,
 			'store_import_meta',
 		], 10, 2 );
+		add_filter( 'tribe_events_mu_defaults', [ $this, 'mu_defaults' ] );
 	}
 
 	/**
@@ -140,5 +141,13 @@ class Options {
 		$record->update_meta( 'link', empty( $data['link'] ) ? null : $data['link'] );
 		$record->update_meta( 'timezone', empty( $data['timezone'] ) ? null : $data['timezone'] );
 		$record->update_meta( 'delete_upcoming_events', ! empty( $data['delete_upcoming_events'] ) );
+	}
+
+	public function mu_defaults( $tribe_events_mu_defaults ) {
+		$tribe_events_mu_defaults[ Settings::PREFIX . 'delete_duplicate_removed_events' ] = 'no';
+		$tribe_events_mu_defaults[ Settings::PREFIX . 'link_directly_to_website_url' ]    = 'no';
+		$tribe_events_mu_defaults[ Settings::PREFIX . 'retain_line_breaks' ]              = 'no';
+
+		return $tribe_events_mu_defaults;
 	}
 }

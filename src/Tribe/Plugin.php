@@ -1,4 +1,5 @@
 <?php
+
 namespace Tribe\Extensions\EA_Additional_Options;
 
 /**
@@ -111,6 +112,6 @@ class Plugin extends \tad_DI52_ServiceProvider {
 		$plugin_register->register_plugin();
 
 		$this->container->singleton( Plugin_Register::class, $plugin_register );
-		$this->container->singleton( 'extension.__TRIBE_SLUG_CLEAN__', $plugin_register );
+		$this->container->singleton( 'extension.ea_additional_options', $plugin_register );
 	}
 }
