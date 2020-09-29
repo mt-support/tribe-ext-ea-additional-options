@@ -75,17 +75,12 @@ class Plugin extends \tad_DI52_ServiceProvider {
 		$this->container->singleton( static::class, $this );
 		$this->container->singleton( 'extension.__TRIBE_SLUG_CLEAN__', $this );
 		$this->container->singleton( 'extension.__TRIBE_SLUG_CLEAN__.plugin', $this );
-		$this->container->register( PUE::class );
 
 		if ( ! $this->check_plugin_dependencies() ) {
 			// If the plugin dependency manifest is not met, then bail and stop here.
 			return;
 		}
 
-		// Start binds.
-
-
-		// End binds.
 		$this->container->register( Hooks::class );
 	}
 
