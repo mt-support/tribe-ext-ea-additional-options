@@ -42,7 +42,7 @@ function tribe_extension_ea_additional_options() {
 			'ea_additional_options',
 			'<p>' . esc_html__( 'Couldn\'t properly load "Tribe__Events__Main Extension: EA_Additional_Options" the extension was deactivated.', 'tribe-ext-ea-additional-options' ) . '</p>',
 			[],
-			1,
+			1
 		);
 
 		deactivate_plugins( __FILE__, true );

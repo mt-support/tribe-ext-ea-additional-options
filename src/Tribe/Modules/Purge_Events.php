@@ -2,6 +2,8 @@
 
 namespace Tribe\Extensions\EA_Additional_Options\Modules;
 
+use Tribe__Events__Aggregator__Record__Queue_Processor;
+
 class Purge_Events {
 
 	const IMPORT_HASH_META_KEY = '_tribe_aggregator_origin_import_hash_id';
@@ -47,7 +49,7 @@ class Purge_Events {
 
 		$events = tribe_get_events( [
 			'fields'         => 'ids',
-			'posts_per_page' => apply_filters( 'tribe_ext_ea_additional_options_purge_items_per_page', 250 ),
+			'posts_per_page' => (int) apply_filters( 'tribe_aggregator_batch_size', Tribe__Events__Aggregator__Record__Queue_Processor::$batch_size ) * 3,
 			'post_status'    => 'any',
 			'starts_after'   => empty( $meta['start'] )
 				? date( 'Y-m-d H:i:s' )
