@@ -70,8 +70,8 @@ class Purge_Events {
 			],
 		] );
 
-		foreach ( $events as $id ) {
-			tribe_delete_event( $id, true );
+		foreach ( $events as $post ) {
+			tribe_delete_event( $post instanceof \WP_Post ? $post->ID : $post, true );
 		}
 	}
 }
