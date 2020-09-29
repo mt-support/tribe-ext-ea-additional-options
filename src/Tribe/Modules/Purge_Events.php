@@ -49,7 +49,7 @@ class Purge_Events {
 			'fields'         => 'ids',
 			'posts_per_page' => apply_filters( 'tribe_ext_ea_additional_options_purge_items_per_page', 250 ),
 			'post_status'    => 'any',
-			'starts_after'     => empty( $meta['start'] )
+			'starts_after'   => empty( $meta['start'] )
 				? date( 'Y-m-d H:i:s' )
 				// The refine by date only has the Y-m-d values time is provided to follow the required format.
 				: $meta['start'] . ' 00:00:00',
