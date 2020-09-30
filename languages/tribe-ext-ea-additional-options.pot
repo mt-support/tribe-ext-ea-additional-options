@@ -1,8 +1,8 @@
 # Copyright (C) 2020 Modern Tribe, Inc.
-# This file is distributed under the same license as the Events Aggregator Extension: Additional Options plugin.
+# This file is distributed under the same license as the Event Aggregator Extension: Additional Options plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Events Aggregator Extension: Additional Options 1.1.1\n"
+"Project-Id-Version: Event Aggregator Extension: Additional Options 1.1.1\n"
 "Report-Msgid-Bugs-To: Modern Tribe, Inc. <https://support.theeventscalendar.com/>\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "X-Domain: tribe-ext-ea-additional-options\n"
 
 #. Plugin Name of the plugin
-msgid "Events Aggregator Extension: Additional Options"
+msgid "Event Aggregator Extension: Additional Options"
 msgstr ""
 
 #. Plugin URI of the plugin
