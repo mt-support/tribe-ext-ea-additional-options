@@ -46,7 +46,7 @@ class Delete_Duplicated_Events {
 		$pemanent_removal = $deletion_setting === 'permanent';
 		$ids_to_delete    = tribe_get_events( [
 			'fields'         => 'ids',
-			'posts_per_page' => -1,
+			'posts_per_page' => - 1,
 			'post_status'    => 'publish',
 			'ends_after'     => date( 'Y-m-d H:i:s' ),
 			'meta_query'     => [
@@ -64,8 +64,8 @@ class Delete_Duplicated_Events {
 			],
 		] );
 
-		foreach ( $ids_to_delete as $eventId ) {
-			tribe_delete_event( $eventId, $pemanent_removal );
+		foreach ( $ids_to_delete as $event ) {
+			tribe_delete_event( $event instanceof \WP_Post ? $event->ID : $event, $pemanent_removal );
 		}
 	}
 }
