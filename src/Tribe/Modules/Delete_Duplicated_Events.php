@@ -64,8 +64,8 @@ class Delete_Duplicated_Events {
 			],
 		] );
 
-		foreach ( $ids_to_delete as $eventId ) {
-			tribe_delete_event( $eventId, $pemanent_removal );
+		foreach ( $ids_to_delete as $event ) {
+			tribe_delete_event( $event instanceof \WP_Post ? $event->ID : $event, $pemanent_removal );
 		}
 	}
 }
