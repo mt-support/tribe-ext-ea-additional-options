@@ -73,6 +73,7 @@ class Options {
 
 		if ( ! empty( $meta['prefix'] ) && strpos( $event['post_title'], $meta['prefix'] ) !== 0 ) {
 			$event['post_title'] = $meta['prefix'] . ' ' . $event['post_title'];
+			$event['post_name'] = trim( sanitize_title( $event['post_title'] ), '-' );
 		}
 
 		if ( ! empty( $meta['link'] ) ) {
