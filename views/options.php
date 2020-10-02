@@ -8,7 +8,7 @@
 			<select name="aggregator[timezone]" id="tribe-ea-field-timezone" class="tribe-ea-field tribe-ea-dropdown tribe-ea-size-large">
 				<option value="">Do not change the timezone.</option>
 				<?php foreach ( $timezones as $tz ) : ?>
-				<option value="<?php echo esc_attr( $tz ); ?>" <?php selected( $selectedTimezone, $tz, false ); ?>>
+				<option value="<?php echo esc_attr( $tz ); ?>" <?php selected( $selectedTimezone, $tz, true ); ?>>
 					<?php esc_html_e( str_replace( '_', ' ', $tz ) ); ?>
 				</option>
 				<?php endforeach; ?>
