@@ -73,7 +73,7 @@ class Options {
 
 		if ( ! empty( $meta['prefix'] ) && strpos( $event['post_title'], $meta['prefix'] ) !== 0 ) {
 			$event['post_title'] = $meta['prefix'] . ' ' . $event['post_title'];
-			$event['post_name'] = trim( sanitize_title( $event['post_title'] ), '-' );
+			$event['post_name']  = trim( sanitize_title( $event['post_title'] ), '-' );
 		}
 
 		if ( ! empty( $meta['link'] ) ) {
@@ -97,10 +97,25 @@ class Options {
 		try {
 			$utc           = new DateTimeZone( "UTC" );
 			$target_offset = timezone_offset_get( timezone_open( $meta['timezone'] ), new DateTime( 'now', $utc ) );
-			if ( empty( $event['EventUTCStartDate'] ) ) {
+
+			$use_utc = empty( $event['EventUTCStartDate'] )
+			           && ! empty( $event['EventUTCStartDate'] )
+			           && ! empty( $event['EventUTCEndDate'] );
+
+			$missing_event_details = empty( $event['EventStartDate'] )
+			                     && empty( $event['EventEndDate'] )
+			                     && empty( $event['EventStartHour'] )
+			                     && empty( $event['EventEndHour'] )
+			                     && empty( $event['EventStartMinute'] )
+			                     && empty( $event['EventEndMinute'] )
+			                     && empty( $event['EventTimezone'] );
+
+			if ( $use_utc ) {
 				$start          = new DateTime( $event['EventUTCStartDate'], $utc );
 				$end            = new DateTime( $event['EventUTCEndDate'], $utc );
 				$targetInterval = DateInterval::createFromDateString( $target_offset . ' seconds' );
+			} else if ( $missing_event_details ) {
+				return $event;
 			} else {
 				$event['EventTimezone'] = str_replace( 'UTC', 'Etc/GMT', $event['EventTimezone'] );
 				$eventOffset            = timezone_offset_get( timezone_open( $event['EventTimezone'] ), new DateTime( 'now', $utc ) );
@@ -110,8 +125,10 @@ class Options {
 				$offsetDiff             = (int) $target_offset - (int) $eventOffset;
 				$targetInterval         = DateInterval::createFromDateString( $offsetDiff . ' seconds' );
 			}
+
 			$start->add( $targetInterval );
 			$end->add( $targetInterval );
+
 			$event['EventStartDate']   = $start->format( 'Y-m-d' );
 			$event['EventStartHour']   = $start->format( 'H' );
 			$event['EventStartMinute'] = $start->format( 'i' );
