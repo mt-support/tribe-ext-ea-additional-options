@@ -33,6 +33,10 @@ We're always interested in your feedback and our [Help Desk](https://support.the
 
 == Changelog ==
 
+= [1.3.0] = TBD
+
+* Feature - Add option to bulk import Event Aggregator Records via CSV file.
+
 = [1.2.1] 2020-10-02 =
 
 * Fix - Timezone additional option was not reflecting the selected value.
