@@ -2,6 +2,7 @@
 
 namespace Tribe\Extensions\EA_Additional_Options\Bulk;
 
+use Tribe__Events__Aggregator__Record__Activity;
 use Tribe__Events__Aggregator__Records;
 use Tribe__Events__Importer__File_Importer;
 
@@ -11,6 +12,7 @@ class Schedule_Imports {
 		add_filter( 'tribe_event_import_tribe-ea-record_column_names', [ $this, 'map_columns' ] );
 		add_filter( 'tribe_aggregator_csv_column_mapping', [ $this, 'csv_column_mapping' ] );
 		add_filter( 'tribe_events_import_tribe-ea-record_importer', [ $this, 'define_importer' ], 10, 2 );
+		add_action( 'tribe_aggregator_record_activity_wakeup', [ $this, 'activity_wakeup' ] );
 	}
 
 	public function add_bulk_import_type( array $types = [] ) {
@@ -33,15 +35,15 @@ class Schedule_Imports {
 			'schedule'               => __( 'Import Schedule', 'tribe-ext-ea-additional-options' ),
 			'url'                    => __( 'URL', 'tribe-ext-ea-additional-options' ),
 			// Backward compatibility with previous version of TEC.
-			'keywords)'             => __( 'Refine by Keyword(s)', 'tribe-ext-ea-additional-options' ),
-			'keywords'             => __( 'Refine by Keyword(s)', 'tribe-ext-ea-additional-options' ),
+			'keywords)'              => __( 'Refine by Keyword(s)', 'tribe-ext-ea-additional-options' ),
+			'keywords'               => __( 'Refine by Keyword(s)', 'tribe-ext-ea-additional-options' ),
 			'date'                   => __( 'Refine by Date', 'tribe-ext-ea-additional-options' ),
 			'location'               => __( 'Refine by Location', 'tribe-ext-ea-additional-options' ),
 			'radius'                 => __( 'Refine by Radius', 'tribe-ext-ea-additional-options' ),
 			'event_status'           => __( 'Event Status', 'tribe-ext-ea-additional-options' ),
 			'event_category'         => __( 'Event Category', 'tribe-ext-ea-additional-options' ),
 			'event_timezone'         => __( 'Event Time Zone', 'tribe-ext-ea-additional-options' ),
-			'prefix'                 => __( 'Event Title Prefix', 'tribe-ext-ea-additional-options' ),
+			'title_prefix'           => __( 'Event Title Prefix', 'tribe-ext-ea-additional-options' ),
 			'delete_upcoming_events' => __( 'Delete Upcoming Events', 'tribe-ext-ea-additional-options' ),
 		];
 	}
@@ -52,5 +54,9 @@ class Schedule_Imports {
 		}
 
 		return new Importer( $file_reader );
+	}
+
+	public function activity_wakeup( Tribe__Events__Aggregator__Record__Activity $activity ) {
+		$activity->register( 'tribe-ea-record', [ 'ea' ] );
 	}
 }
