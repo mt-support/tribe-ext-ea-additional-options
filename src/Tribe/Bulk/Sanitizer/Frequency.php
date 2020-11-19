@@ -20,6 +20,16 @@ class Frequency extends Sanitizer {
 		'monthly',
 	];
 
+	/**
+	 * Validate the frequency of an import by making sure only valid paramters are allowed, a set of alias are provided
+	 * in case a user uses a different value for the frequency other than the defined types.
+	 *
+	 * @since TBD
+	 *
+	 * @param mixed $value
+	 *
+	 * @return mixed|string|null
+	 */
 	public function sanitize( $value ) {
 
 		if ( $this->get_value( 'type' ) !== 'schedule' ) {
