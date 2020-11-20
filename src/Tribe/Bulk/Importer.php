@@ -6,6 +6,7 @@ use Tribe\Extensions\EA_Additional_Options\Bulk\Sanitizer\Category;
 use Tribe\Extensions\EA_Additional_Options\Bulk\Sanitizer\Frequency;
 use Tribe\Extensions\EA_Additional_Options\Bulk\Sanitizer\Nullable;
 use Tribe\Extensions\EA_Additional_Options\Bulk\Sanitizer\Origin;
+use Tribe\Extensions\EA_Additional_Options\Bulk\Sanitizer\Radius;
 use Tribe\Extensions\EA_Additional_Options\Bulk\Sanitizer\Type;
 use Tribe\Extensions\EA_Additional_Options\Bulk\Sanitizer\Url;
 use Tribe__Events__Aggregator__Records;
@@ -25,6 +26,7 @@ class Importer extends \Tribe__Events__Importer__File_Importer {
 		'delete_upcoming_events' => Boolean::class,
 		'source'                 => Url::class,
 		'link'                   => Url::class,
+		'radius'                 => Radius::class,
 	];
 
 	/**
@@ -259,8 +261,11 @@ class Importer extends \Tribe__Events__Importer__File_Importer {
 	 * @return boolean|integer False if the import can't be created or the ID of the created record.
 	 */
 	private function process_import( array $meta = [] ) {
-		$record       = Tribe__Events__Aggregator__Records::instance()->get_by_origin( $meta['origin'] );
-		$meta['hash'] = $this->get_hash( $meta );
+		$record = Tribe__Events__Aggregator__Records::instance()->get_by_origin( $meta['origin'] );
+
+		$meta['hash']             = $this->get_hash( $meta );
+		$meta['allow_batch_push'] = true;
+
 		$record->create( $meta['type'], [], $meta );
 
 		if ( ! $record->post instanceof \WP_Post ) {
@@ -270,18 +275,18 @@ class Importer extends \Tribe__Events__Importer__File_Importer {
 		$record->set_status_as_pending();
 		$record->finalize();
 
-		if ( 'schedule' === $record->meta['type'] ) {
+		if ( 'schedule' === $meta['type'] ) {
 			$create_schedule_result = $record->create_schedule_record();
 
 			if ( is_wp_error( $create_schedule_result ) ) {
 				$record->set_status_as_failed( $create_schedule_result );
 
-				return false;
+				return $create_schedule_result;
 			}
 		}
 
-		$record->process_posts( [], 'schedule' !== $record->meta['type'] );
 		$record->queue_import();
+		$record->process_posts( [], true );
 
 		return $record->id;
 	}
