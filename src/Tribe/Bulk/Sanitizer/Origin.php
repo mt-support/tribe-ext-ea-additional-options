@@ -6,6 +6,9 @@ class Origin extends Sanitizer {
 	private $alias = [
 		'google calendar' => 'gcal',
 		'icalendar'       => 'ical',
+		'other url'       => 'url',
+		'other-url'       => 'url',
+		'other_url'       => 'url',
 	];
 
 	private $valid_origins = [
