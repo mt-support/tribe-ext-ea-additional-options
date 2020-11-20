@@ -4,11 +4,12 @@ namespace Tribe\Extensions\EA_Additional_Options\Bulk\Sanitizer;
 
 class Frequency extends Sanitizer {
 	private $alias = [
-		'on demand'  => 'on_demand',
-		'ondemand'   => 'on_demand',
-		'30 minutes' => 'every30mins',
-		'half hour'  => 'every30mins',
-		'30 min'     => 'every30mins',
+		'on demand'        => 'on_demand',
+		'ondemand'         => 'on_demand',
+		'30 minutes'       => 'every30mins',
+		'half hour'        => 'every30mins',
+		'30 min'           => 'every30mins',
+		'every 30 minutes' => 'every30mins',
 	];
 
 	private $valid_type = [
