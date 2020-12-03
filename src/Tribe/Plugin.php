@@ -73,8 +73,6 @@ class Plugin extends \tad_DI52_ServiceProvider {
 
 		// Register this provider as the main one and use a bunch of aliases.
 		$this->container->singleton( static::class, $this );
-		$this->container->singleton( 'extension.__TRIBE_SLUG_CLEAN__', $this );
-		$this->container->singleton( 'extension.__TRIBE_SLUG_CLEAN__.plugin', $this );
 
 		if ( ! $this->check_plugin_dependencies() ) {
 			// If the plugin dependency manifest is not met, then bail and stop here.

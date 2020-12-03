@@ -95,20 +95,23 @@ class Options {
 		}
 
 		try {
-			$utc           = new DateTimeZone( "UTC" );
-			$target_offset = timezone_offset_get( timezone_open( $meta['timezone'] ), new DateTime( 'now', $utc ) );
+			$utc      = new DateTimeZone( "UTC" );
+			$timezone = str_replace( ' ', '_', trim( $meta['timezone'] ) );
+			$tz = new DateTimeZone( $timezone );
+
+			$target_offset = timezone_offset_get( $tz, new DateTime( 'now', $utc ) );
 
 			$use_utc = empty( $event['EventUTCStartDate'] )
 			           && ! empty( $event['EventUTCStartDate'] )
 			           && ! empty( $event['EventUTCEndDate'] );
 
 			$missing_event_details = empty( $event['EventStartDate'] )
-			                     && empty( $event['EventEndDate'] )
-			                     && empty( $event['EventStartHour'] )
-			                     && empty( $event['EventEndHour'] )
-			                     && empty( $event['EventStartMinute'] )
-			                     && empty( $event['EventEndMinute'] )
-			                     && empty( $event['EventTimezone'] );
+			                         && empty( $event['EventEndDate'] )
+			                         && empty( $event['EventStartHour'] )
+			                         && empty( $event['EventEndHour'] )
+			                         && empty( $event['EventStartMinute'] )
+			                         && empty( $event['EventEndMinute'] )
+			                         && empty( $event['EventTimezone'] );
 
 			if ( $use_utc ) {
 				$start          = new DateTime( $event['EventUTCStartDate'], $utc );
@@ -135,7 +138,7 @@ class Options {
 			$event['EventEndDate']     = $end->format( 'Y-m-d' );
 			$event['EventEndHour']     = $end->format( 'H' );
 			$event['EventEndMinute']   = $end->format( 'i' );
-			$event['EventTimezone']    = $meta['timezone'];
+			$event['EventTimezone']    = $timezone;
 
 			return $event;
 		} catch ( \Exception $e ) {

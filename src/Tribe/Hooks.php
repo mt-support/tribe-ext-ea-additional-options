@@ -21,6 +21,8 @@
 
 namespace Tribe\Extensions\EA_Additional_Options;
 
+use Tribe\Extensions\EA_Additional_Options\Bulk\Schedule_Imports;
+use Tribe\Extensions\EA_Additional_Options\Bulk_Schedule_Import\View;
 use Tribe\Extensions\EA_Additional_Options\Modules\Delete_Duplicated_Events;
 use Tribe\Extensions\EA_Additional_Options\Modules\Line_Breaks;
 use Tribe\Extensions\EA_Additional_Options\Modules\Options;
@@ -53,6 +55,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		$this->container->singleton( Options::class, Options::class, [ 'hook' ] );
 		$this->container->singleton( Line_Breaks::class, Line_Breaks::class, [ 'hook' ] );
 		$this->container->singleton( Purge_Events::class, Purge_Events::class, [ 'hook' ] );
+		$this->container->singleton( Schedule_Imports::class, Schedule_Imports::class, [ 'hook' ] );
 
 		$this->add_actions();
 		$this->add_filters();
@@ -64,6 +67,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		tribe( Options::class );
 		tribe( Line_Breaks::class );
 		tribe( Purge_Events::class );
+		tribe( Schedule_Imports::class );
 	}
 
 	/**
