@@ -69,7 +69,7 @@ class Importer extends \Tribe__Events__Importer__File_Importer {
 		] );
 
 		if ( $matches->have_posts() ) {
-			return head( $matches->posts );
+			return reset( $matches->posts );
 		}
 
 		return false;
