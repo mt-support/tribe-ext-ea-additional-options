@@ -2,6 +2,7 @@
 
 namespace Tribe\Extensions\EA_Additional_Options\Modules;
 
+use Tribe__Events__Aggregator__Record__Abstract as Record_Abstract;
 use Tribe__Events__Aggregator__Record__Queue_Processor;
 
 class Purge_Events {
@@ -47,28 +48,13 @@ class Purge_Events {
 			return;
 		}
 
-		$events = tribe_get_events( [
-			'fields'             => 'ids',
-			'posts_per_page'     => (int) apply_filters( 'tribe_aggregator_batch_size', Tribe__Events__Aggregator__Record__Queue_Processor::$batch_size ) * 3,
-			'post_status'        => 'any',
-			'starts_on_or_after' => empty( $meta['start'] )
-				? date( 'Y-m-d 00:00:00' )
-				// The refine by date only has the Y-m-d values time is provided to follow the required format.
-				: $meta['start'] . ' 00:00:00',
-			'meta_query'         => [
-				[
-					'key'     => self::IMPORT_HASH_META_KEY,
-					'value'   => $meta['import_id'],
-					'compare' => '=',
-				],
-				[
-					'key'     => self::RECORD_META_KEY,
-					'value'   => $meta['recent_child'],
-					// Pull any record that is before the current one as recent_child is the record prior to the current one.
-					'compare' => '<=',
-				],
-			],
-		] );
+		$prefix = Record_Abstract::$meta_key_prefix;
+
+		$events = tribe_events()
+			->where( 'meta_less_than', "{$prefix}origin_record_id", $meta['recent_child'] )
+			->where( 'meta', "{$prefix}source", $meta['source'] )
+			->per_page( (int) apply_filters( 'tribe_aggregator_batch_size', Tribe__Events__Aggregator__Record__Queue_Processor::$batch_size ) * 3 )
+			->all();
 
 		foreach ( $events as $post ) {
 			tribe_delete_event( $post instanceof \WP_Post ? $post->ID : $post, true );
