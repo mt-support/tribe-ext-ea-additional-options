@@ -50,9 +50,12 @@ class Purge_Events {
 
 		$prefix = Record_Abstract::$meta_key_prefix;
 
+		$starts_on_or_after = empty( $meta['start'] ) ? date( 'Y-m-d 00:00:00' ) : $meta['start'] . ' 00:00:00';
+
 		$events = tribe_events()
 			->where( 'meta_less_than', "{$prefix}origin_record_id", $meta['recent_child'] )
 			->where( 'meta', "{$prefix}source", $meta['source'] )
+			->where( 'starts_on_or_after', $starts_on_or_after )
 			->per_page( (int) apply_filters( 'tribe_aggregator_batch_size', Tribe__Events__Aggregator__Record__Queue_Processor::$batch_size ) * 3 )
 			->all();
 
