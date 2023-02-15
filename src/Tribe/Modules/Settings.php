@@ -11,7 +11,7 @@ class Settings {
 	 *
 	 * @var Settings_Helper
 	 */
-	protected $settings_helper;
+	protected Settings_Helper $settings_helper;
 
 	/**
 	 * The prefix for our settings keys.
@@ -24,8 +24,6 @@ class Settings {
 
 	/**
 	 * Settings constructor.
-	 *
-	 * TODO: Update this entire class for your needs, or remove the entire `src` directory this file is in and do not load it in the main plugin file.
 	 *
 	 * @param Settings_Helper $settings_helper
 	 */
@@ -79,7 +77,7 @@ class Settings {
 				'default'         => 'no',
 				'options'         => [
 					'no'  => __( 'Remove all line breaks from event descriptions.', 'tribe-ext-ea-additional-options' ),
-					'yes' => __( 'Retain all line breaks within event descirptions.', 'tribe-ext-ea-additional-options' ),
+					'yes' => __( 'Retain all line breaks within event descriptions.', 'tribe-ext-ea-additional-options' ),
 				],
 			],
 			self::PREFIX . 'default_template'                => [
@@ -96,8 +94,9 @@ class Settings {
 		];
 
 		$this->settings_helper->add_fields(
-			$fields, 'imports', // not the 'event-tickets' ("Tickets" tab) because it doesn't exist without Event Tickets
-			'tribe_aggregator_disable', false
+			$fields, 'imports',
+			'tribe_aggregator_disable',
+			false
 		);
 	}
 
@@ -106,7 +105,7 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	public function get_template_options() {
+	public function get_template_options(): array {
 		$args   = [
 			'status' => 'draft',
 		];
