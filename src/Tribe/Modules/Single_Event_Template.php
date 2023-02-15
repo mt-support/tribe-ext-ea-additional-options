@@ -99,6 +99,13 @@ class Single_Event_Template {
 				'comments'       => '<!-- wp:post-comments-form /-->',
 			];
 
+			/**
+			 * Allows filtering the Simple block template.
+			 *
+			 * @var array $blocks The HTML markup of block elements in an array.
+			 */
+			$blocks = apply_filters( 'tribe_ext_ea_additional_options_simple_template', $blocks );
+
 			$template = implode( "\n", $blocks );
 		} else {
 			$post = get_post( $template_post_id );
