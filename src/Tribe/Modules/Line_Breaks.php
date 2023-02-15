@@ -17,7 +17,6 @@ class Line_Breaks {
 		$use_template = tribe_get_option( Settings::PREFIX . 'default_template' );
 		if ( ! isset( $use_template ) || ! $use_template ) {
 			add_filter( 'tribe_aggregator_event_translate_service_data_field_map', [ $this, 'remove_line_breaks' ] );
-			//add_filter( 'tribe_aggregator_before_insert_event', [ $this, 'filter_imported_event' ], 10, 2 );
 			add_filter( 'tribe_aggregator_before_update_event', [ $this, 'filter_imported_event' ], 10, 2 );
 			add_filter( 'tribe_aggregator_before_save_event', [ $this, 'filter_imported_event' ], 10, 2 );
 		}
