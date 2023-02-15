@@ -105,7 +105,7 @@ class Single_Event_Template {
 
 			// If there is no template, or not the right format then skip.
 			if (
-				! $post
+				! $post instanceof \WP_Post
 				|| $post->post_type != 'tribe_events'
 				|| $post->post_status != 'draft'
 			) {
