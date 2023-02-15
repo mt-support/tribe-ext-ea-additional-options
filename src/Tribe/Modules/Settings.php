@@ -49,7 +49,14 @@ class Settings {
 			self::PREFIX . 'delete_duplicate_removed_events' => [
 				'type'            => 'radio',
 				'label'           => esc_html__( 'Delete Duplicate/Removed Events for Scheduled Imports', 'tribe-ext-ea-additional-options' ),
-				'tooltip'         => esc_html__( 'Check this box to delete events that are removed from the import source. This will also remove duplicates in the case where the source changes the unique identifier for an event. ** NOTE: If your "Event Update Authority" setting is "Do not re-import events...", this setting will have no effect.', 'tribe-ext-ea-additional-options' ),
+				'tooltip' => sprintf(
+				/* translators: %1$s: opening strong tag; %2$s: closing strong tag */
+					esc_html__(
+						'Check this box to delete events that are removed from the import source. This will also remove duplicates in the case where the source changes the unique identifier for an event. %1$sNOTE: If your "Event Update Authority" setting is "Do not re-import events...", this setting will have no effect.%2$s', 'tribe-ext-ea-additional-options'
+					),
+					'<strong>',
+					'</strong>'
+				),
 				'validation_type' => 'options',
 				'default'         => 'no',
 				'options'         => [
@@ -61,7 +68,12 @@ class Settings {
 			self::PREFIX . 'link_directly_to_website_url'    => [
 				'type'            => 'radio',
 				'label'           => esc_html__( 'Link Directly to Website URL, Bypassing Default Event Page', 'tribe-ext-ea-additional-options' ),
-				'tooltip'         => esc_html__( 'Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field. ** NOTE: This setting only affects legacy views and will not work in the upgraded views. **', 'tribe-ext-ea-additional-options' ),
+				'tooltip' => sprintf(
+				/* translators: %1$s: opening strong tag; %2$s: closing strong tag */
+					esc_html__( 'Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field. %1$sNOTE: This setting only affects legacy views and will not work in the upgraded views.%2$s', 'tribe-ext-ea-additional-options' ),
+					'<strong>',
+					'</strong>'
+				),
 				'validation_type' => 'options',
 				'default'         => 'no',
 				'options'         => [
