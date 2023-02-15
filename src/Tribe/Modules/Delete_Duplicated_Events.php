@@ -42,15 +42,15 @@ class Delete_Duplicated_Events {
 			return;
 		}
 
-		$deletion_setting = tribe_get_option( Settings::PREFIX . 'delete_duplicate_removed_events' );
-		$pemanent_removal = $deletion_setting === 'permanent';
-		$query    =  new \WP_Query( [
+		$deletion_setting  = tribe_get_option( Settings::PREFIX . 'delete_duplicate_removed_events' );
+		$permanent_removal = $deletion_setting === 'permanent';
+		$query             = new \WP_Query( [
 			'tribe_suppress_query_filters' => true,
-			'post_type'      => 'tribe_events',
-			'fields'         => 'all',
-			'posts_per_page' => - 1,
-			'post_status'    => 'publish',
-			'meta_query'     => [
+			'post_type'                    => 'tribe_events',
+			'fields'                       => 'all',
+			'posts_per_page'               => - 1,
+			'post_status'                  => 'publish',
+			'meta_query'                   => [
 				'relation' => 'AND',
 				[
 					'key'     => '_tribe_aggregator_parent_record',
@@ -73,7 +73,7 @@ class Delete_Duplicated_Events {
 
 		$ids_to_delete = $query->get_posts();
 		foreach ( $ids_to_delete as $event ) {
-			tribe_delete_event( $event instanceof \WP_Post ? $event->ID : $event, $pemanent_removal );
+			tribe_delete_event( $event instanceof \WP_Post ? $event->ID : $event, $permanent_removal );
 		}
 	}
 }
