@@ -158,7 +158,8 @@ class Settings {
 
 		if ( tribe_is_truthy( $block_editor ) ) {
 			$tooltip = sprintf(
-				esc_html__( 'Select the draft event post to be used as a template. The post should only have the block structure and no content. Place %s[tec_ea_content]%s in a %sparagraph block%s where you want the description of the imported event to show up.', 'tribe-ext-ea-additional-options' ),
+			/* translators: %1$s: opening code tag; %2$s: closing code tag; %3$s: opening strong tag; %s$4: closing strong tag */
+				esc_html__( 'Select the draft event post to be used as a template. The post should only have the block structure and no content. Place %1$s[tec_ea_content]%2$s in a %3$sparagraph block%4$s where you want the description of the imported event to show up.', 'tribe-ext-ea-additional-options' ),
 				'<code>',
 				'</code>',
 				'<strong>',
@@ -166,7 +167,8 @@ class Settings {
 			);
 		} else {
 			$tooltip = sprintf(
-				esc_html__( 'Please enable the block editor for events under %sEvents > Settings > General%s to be able to use this feature.', 'tribe-ext-ea-additional-options' ),
+			/* translators: %1$s: opening anchor tag; %2$s: closing anchor tag */
+				esc_html__( 'Please enable the block editor for events under %1$sEvents > Settings > General%2$s to be able to use this feature.', 'tribe-ext-ea-additional-options' ),
 				'<a href="' . admin_url( 'edit.php?page=tec-events-settings&tab=general&post_type=tribe_events#tec-settings-general-editing' ) . '">',
 				'</a>'
 			);
