@@ -41,7 +41,6 @@ class Settings {
 	 * Adds a new section of fields to Events > Settings > General tab, appearing after the "Map Settings" section
 	 * and before the "Miscellaneous Settings" section.
 	 *
-	 * TODO: Move it to where you want and update this docblock. If you like it here, just delete this TODO.
 	 */
 	public function add_settings() {
 		$fields = [
@@ -83,11 +82,97 @@ class Settings {
 					'yes' => __( 'Retain all line breaks within event descirptions.', 'tribe-ext-ea-additional-options' ),
 				],
 			],
+			self::PREFIX . 'default_template'                => [
+				'type'            => 'dropdown',
+				'label'           => esc_html__( 'Block editor template', 'tribe-ext-ea-additional-options' ),
+				'tooltip'         => $this->get_template_tooltip(),
+				'default'         => false,
+				'validation_type' => 'options',
+				'options'         => $this->get_template_options(),
+				'can_be_empty'    => true,
+				'size'            => 'small',
+				'attributes'      => $this->get_template_attributes(),
+			],
 		];
 
 		$this->settings_helper->add_fields(
 			$fields, 'imports', // not the 'event-tickets' ("Tickets" tab) because it doesn't exist without Event Tickets
 			'tribe_aggregator_disable', false
 		);
+	}
+
+	/**
+	 * Get all draft events to show them as options in the dropdown.
+	 *
+	 * @return array
+	 */
+	public function get_template_options() {
+		$args   = [
+			'status' => 'draft',
+		];
+		$events = tribe_get_events( $args, false );
+
+		// If the block editor is not enabled, then disable the setting.
+		$block_editor = tribe_get_option( 'toggle_blocks_editor', null );
+		if ( ! tribe_is_truthy( $block_editor ) ) {
+			return [ esc_html__( 'The block editor for events is disabled!', 'tribe-ext-ea-additional-options' ) ];
+		}
+
+		$options = [
+			''       => esc_html__( 'None (default)', 'tribe-ext-ea-additional-options' ),
+			'enable' => esc_html__( 'Simple', 'tribe-ext-ea-additional-options' ),
+		];
+
+		foreach ( $events as $event ) {
+			$options[ $event->ID ] = $event->post_title;
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Retrieve the attributes for the setting.
+	 * If block editor for events is not enabled, then disable the field.
+	 *
+	 * @return array
+	 */
+	private function get_template_attributes(): array {
+		$block_editor = tribe_get_option( 'toggle_blocks_editor', null );
+
+		if ( tribe_is_truthy( $block_editor ) ) {
+			return [];
+		} else {
+			return [
+				'readonly' => 'readonly',
+				'disabled' => 'disabled',
+			];
+		}
+	}
+
+	/**
+	 * Retrieve the description of the setting.
+	 *
+	 * @return string
+	 */
+	private function get_template_tooltip(): string {
+		$block_editor = tribe_get_option( 'toggle_blocks_editor', null );
+
+		if ( tribe_is_truthy( $block_editor ) ) {
+			$tooltip = sprintf(
+				esc_html__( 'Select the draft event post to be used as a template. The post should only have the block structure and no content. Place %s[tec_ea_content]%s in a %sparagraph block%s where you want the description of the imported event to show up.', 'tribe-ext-ea-additional-options' ),
+				'<code>',
+				'</code>',
+				'<strong>',
+				'</strong>'
+			);
+		} else {
+			$tooltip = sprintf(
+				esc_html__( 'Please enable the block editor for events under %sEvents > Settings > General%s to be able to use this feature.', 'tribe-ext-ea-additional-options' ),
+				'<a href="' . admin_url( 'edit.php?page=tec-events-settings&tab=general&post_type=tribe_events#tec-settings-general-editing' ) . '">',
+				'</a>'
+			);
+		}
+
+		return $tooltip;
 	}
 }
