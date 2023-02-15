@@ -151,22 +151,20 @@ class Single_Event_Template {
 		);
 
 		// Replace the placeholder with the content from the source.
-		$template = str_replace(
-			'[tec_ea_content]',
-			$description_from_source,
-			$template,
-		);
-
 		// Replace double paragraphs, just in case.
-		$s        = [
-			'<p><p>',
-			'</p></p>',
-		];
-		$r        = [
-			'<p>',
-			'</p>',
-		];
-		$template = str_replace( $s, $r, $template );
+		$template = str_replace(
+			[
+				'[tec_ea_content]',
+				'<p><p>',
+				'</p></p>',
+			],
+			[
+				$description_from_source,
+				'<p>',
+				'</p>',
+			],
+			$template
+		);
 
 		// Add new post_content based on the template.
 		$event['post_content'] = $template;
