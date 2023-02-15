@@ -49,7 +49,14 @@ class Settings {
 			self::PREFIX . 'delete_duplicate_removed_events' => [
 				'type'            => 'radio',
 				'label'           => esc_html__( 'Delete Duplicate/Removed Events for Scheduled Imports', 'tribe-ext-ea-additional-options' ),
-				'tooltip'         => esc_html__( 'Check this box to delete events that are removed from the import source. This will also remove duplicates in the case where the source changes the unique identifier for an event. ** NOTE: If your "Event Update Authority" setting is "Do not re-import events...", this setting will have no effect.', 'tribe-ext-ea-additional-options' ),
+				'tooltip'         => sprintf(
+				/* translators: %1$s: opening strong tag; %2$s: closing strong tag */
+					esc_html__(
+						'Check this box to delete events that are removed from the import source. This will also remove duplicates in the case where the source changes the unique identifier for an event. %1$sNOTE: If your "Event Update Authority" setting is "Do not re-import events...", this setting will have no effect.%2$s', 'tribe-ext-ea-additional-options'
+					),
+					'<strong>',
+					'</strong>'
+				),
 				'validation_type' => 'options',
 				'default'         => 'no',
 				'options'         => [
@@ -61,7 +68,12 @@ class Settings {
 			self::PREFIX . 'link_directly_to_website_url'    => [
 				'type'            => 'radio',
 				'label'           => esc_html__( 'Link Directly to Website URL, Bypassing Default Event Page', 'tribe-ext-ea-additional-options' ),
-				'tooltip'         => esc_html__( 'Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field. ** NOTE: This setting only affects legacy views and will not work in the upgraded views. **', 'tribe-ext-ea-additional-options' ),
+				'tooltip'         => sprintf(
+				/* translators: %1$s: opening strong tag; %2$s: closing strong tag */
+					esc_html__( 'Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field. %1$sNOTE: This setting only affects legacy views and will not work in the upgraded views.%2$s', 'tribe-ext-ea-additional-options' ),
+					'<strong>',
+					'</strong>'
+				),
 				'validation_type' => 'options',
 				'default'         => 'no',
 				'options'         => [
@@ -158,15 +170,24 @@ class Settings {
 
 		if ( tribe_is_truthy( $block_editor ) ) {
 			$tooltip = sprintf(
-				esc_html__( 'Select the draft event post to be used as a template. The post should only have the block structure and no content. Place %s[tec_ea_content]%s in a %sparagraph block%s where you want the description of the imported event to show up.', 'tribe-ext-ea-additional-options' ),
+			/* translators: %1$s: opening code tag; %2$s: closing code tag; %3$s: opening strong tag; %s$4: closing strong tag */
+				esc_html__( 'Select the draft event post to be used as a template. The post should only have the block structure and no content. Place %1$s[tec_ea_content]%2$s in a %3$sparagraph block%4$s where you want the description of the imported event to show up.', 'tribe-ext-ea-additional-options' ),
 				'<code>',
 				'</code>',
 				'<strong>',
 				'</strong>'
 			);
+			$tooltip .= " ";
+			$tooltip .= sprintf(
+			/* translators: %1$s: opening strong tag; %2$s: closing strong tag */
+				esc_html__( '%1$sNOTE: If you are using a template, the "Retain Line Breaks ..." setting will have no effect. Line breaks will be retained.%2$s', 'tribe-ext-ea-additional-options' ),
+				'<strong>',
+				'</strong>'
+			);
 		} else {
 			$tooltip = sprintf(
-				esc_html__( 'Please enable the block editor for events under %sEvents > Settings > General%s to be able to use this feature.', 'tribe-ext-ea-additional-options' ),
+			/* translators: %1$s: opening anchor tag; %2$s: closing anchor tag */
+				esc_html__( 'Please enable the block editor for events under %1$sEvents > Settings > General%2$s to be able to use this feature.', 'tribe-ext-ea-additional-options' ),
 				'<a href="' . admin_url( 'edit.php?page=tec-events-settings&tab=general&post_type=tribe_events#tec-settings-general-editing' ) . '">',
 				'</a>'
 			);
