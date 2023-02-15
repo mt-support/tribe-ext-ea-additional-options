@@ -39,11 +39,12 @@ class Line_Breaks {
 	/**
 	 * Filters event info before being saved or updated
 	 *
-	 * @param array $event
+	 * @param array $event Array containing the event details.
+	 * @param       $record
 	 *
 	 * @return array
 	 */
-	public function filter_imported_event( $event, $record ) {
+	public function filter_imported_event( array $event, $record ): array {
 		$lineBreakOpt = tribe_get_option( Settings::PREFIX . 'retain_line_breaks' );
 		if ( tribe_is_truthy( $lineBreakOpt ) ) {
 			$event['post_content'] = str_replace( [ '\\n', '\n', "\n", "\\n" ], '<br>', $event['post_content'] );
