@@ -30,6 +30,7 @@ use Tribe\Extensions\EA_Additional_Options\Modules\Other_Url;
 use Tribe\Extensions\EA_Additional_Options\Modules\Purge_Events;
 use Tribe\Extensions\EA_Additional_Options\Modules\Settings;
 use Tribe\Extensions\EA_Additional_Options\Modules\Website_link;
+use Tribe\Extensions\EA_Additional_Options\Modules\Single_Event_Template;
 
 /**
  * Class Hooks.
@@ -56,6 +57,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		$this->container->singleton( Line_Breaks::class, Line_Breaks::class, [ 'hook' ] );
 		$this->container->singleton( Purge_Events::class, Purge_Events::class, [ 'hook' ] );
 		$this->container->singleton( Schedule_Imports::class, Schedule_Imports::class, [ 'hook' ] );
+		$this->container->singleton( Single_Event_Template::class, Single_Event_Template::class, [ 'hook' ] );
 
 		$this->add_actions();
 		$this->add_filters();
@@ -68,6 +70,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		tribe( Line_Breaks::class );
 		tribe( Purge_Events::class );
 		tribe( Schedule_Imports::class );
+		tribe( Single_Event_Template::class );
 	}
 
 	/**
