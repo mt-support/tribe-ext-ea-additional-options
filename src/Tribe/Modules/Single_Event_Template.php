@@ -39,12 +39,12 @@ class Single_Event_Template {
 	/**
 	 * Create a block editor version of the imported event(s) based on the draft event defined below by post ID.
 	 *
-	 * @param object $event The event object being handled.
-	 * @param object $data  The import metadata object.
+	 * @param array $event The event array being handled.
+	 * @param \Tribe__Events__Aggregator__Record__Abstract $data  The import metadata object.
 	 *
-	 * @return object The event object.
+	 * @return array The event array.
 	 */
-	public function tec_ea_single_event_template( object $event, object $data ): object {
+	public function tec_ea_single_event_template( array $event, \Tribe__Events__Aggregator__Record__Abstract $data ): array {
 
 		// Make sure this is only done on valid origins.
 		$valid_origins = [
