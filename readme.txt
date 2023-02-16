@@ -5,7 +5,7 @@ Tags: events, calendar
 Requires at least: 5.8.6
 Tested up to: 6.1.1
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPL version 3 or any later version
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -33,10 +33,12 @@ We're always interested in your feedback and our [Help Desk](https://support.the
 
 == Changelog ==
 
-= [1.3.0] = 2023-02-15
+= [1.4.0] 2023-02-15
 
 * Feature - Add option to use a draft event as a template for imported events.
 * Fix - The query responsible for deleting events that were removed from the calendar did not work when Events Calendar Pro was active. [EXT-301]
+
+= [1.3.0] Skipped for compatibility reasons
 
 = [1.2.1] 2020-10-02 =
 
