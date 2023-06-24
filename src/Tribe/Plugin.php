@@ -2,6 +2,8 @@
 
 namespace Tribe\Extensions\EA_Additional_Options;
 
+use TEC\Common\Contracts\Service_Provider;
+
 /**
  * Class Plugin
  *
@@ -9,7 +11,7 @@ namespace Tribe\Extensions\EA_Additional_Options;
  *
  * @package Tribe\Extensions\EA_Additional_Options
  */
-class Plugin extends \tad_DI52_ServiceProvider {
+class Plugin extends Service_Provider {
 	/**
 	 * Stores the version for the plugin.
 	 *
@@ -17,7 +19,7 @@ class Plugin extends \tad_DI52_ServiceProvider {
 	 *
 	 * @var string
 	 */
-	const VERSION = '1.4.0';
+	const VERSION = '1.4.1';
 
 	/**
 	 * Stores the base slug for the plugin.

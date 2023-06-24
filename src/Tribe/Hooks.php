@@ -21,6 +21,7 @@
 
 namespace Tribe\Extensions\EA_Additional_Options;
 
+use TEC\Common\Contracts\Service_Provider;
 use Tribe\Extensions\EA_Additional_Options\Bulk\Schedule_Imports;
 use Tribe\Extensions\EA_Additional_Options\Bulk_Schedule_Import\View;
 use Tribe\Extensions\EA_Additional_Options\Modules\Delete_Duplicated_Events;
@@ -39,7 +40,7 @@ use Tribe\Extensions\EA_Additional_Options\Modules\Single_Event_Template;
  *
  * @package Tribe\Extensions\EA_Additional_Options;
  */
-class Hooks extends \tad_DI52_ServiceProvider {
+class Hooks extends Service_Provider {
 
 	/**
 	 * Binds and sets up implementations.
