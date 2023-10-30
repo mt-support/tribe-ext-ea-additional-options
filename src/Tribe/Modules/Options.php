@@ -119,6 +119,14 @@ class Options {
 			} else if ( $missing_event_details ) {
 				return $event;
 			} else {
+				// If there is a meridian and it's "pm" then adjust times.
+				if ( strtolower( $event['EventStartMeridian'] ) === 'pm' && $event['EventStartHour'] < 12 ) {
+					$event['EventStartHour'] += 12;
+				}
+				if ( strtolower( $event['EventEndMeridian'] ) === 'pm' && $event['EventEndHour'] < 12 ) {
+					$event['EventEndHour'] += 12;
+				}
+
 				$event['EventTimezone'] = str_replace( 'UTC', 'Etc/GMT', $event['EventTimezone'] );
 				$eventOffset            = timezone_offset_get( timezone_open( $event['EventTimezone'] ), new DateTime( $event['EventStartDate'], $utc ) );
 				$currTimezone           = new DateTimeZone( $event['EventTimezone'] );
