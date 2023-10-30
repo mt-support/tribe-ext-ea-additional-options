@@ -101,8 +101,7 @@ class Options {
 
 			$target_offset = timezone_offset_get( $tz, new DateTime( $event['EventStartDate'], $utc ) );
 
-			$use_utc = empty( $event['EventUTCStartDate'] )
-			           && ! empty( $event['EventUTCStartDate'] )
+			$use_utc = ! empty( $event['EventUTCStartDate'] )
 			           && ! empty( $event['EventUTCEndDate'] );
 
 			$missing_event_details = empty( $event['EventStartDate'] )
