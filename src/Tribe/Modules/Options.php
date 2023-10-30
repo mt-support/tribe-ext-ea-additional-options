@@ -99,7 +99,7 @@ class Options {
 			$timezone = str_replace( ' ', '_', trim( $meta['timezone'] ) );
 			$tz = new DateTimeZone( $timezone );
 
-			$target_offset = timezone_offset_get( $tz, new DateTime( 'now', $utc ) );
+			$target_offset = timezone_offset_get( $tz, new DateTime( $event['EventStartDate'], $utc ) );
 
 			$use_utc = empty( $event['EventUTCStartDate'] )
 			           && ! empty( $event['EventUTCStartDate'] )
@@ -121,7 +121,7 @@ class Options {
 				return $event;
 			} else {
 				$event['EventTimezone'] = str_replace( 'UTC', 'Etc/GMT', $event['EventTimezone'] );
-				$eventOffset            = timezone_offset_get( timezone_open( $event['EventTimezone'] ), new DateTime( 'now', $utc ) );
+				$eventOffset            = timezone_offset_get( timezone_open( $event['EventTimezone'] ), new DateTime( $event['EventStartDate'], $utc ) );
 				$currTimezone           = new DateTimeZone( $event['EventTimezone'] );
 				$start                  = new DateTime( $event['EventStartDate'] . ' ' . $event['EventStartHour'] . ':' . $event['EventStartMinute'], $currTimezone );
 				$end                    = new DateTime( $event['EventEndDate'] . ' ' . $event['EventEndHour'] . ':' . $event['EventEndMinute'], $currTimezone );
