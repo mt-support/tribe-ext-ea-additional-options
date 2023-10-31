@@ -120,10 +120,18 @@ class Options {
 				return $event;
 			} else {
 				// If there is a meridian and it's "pm" then adjust times.
-				if ( strtolower( $event['EventStartMeridian'] ) === 'pm' && $event['EventStartHour'] < 12 ) {
+				if (
+					isset( $event['EventStartMeridian'] )
+					&& strtolower( $event['EventStartMeridian'] ) === 'pm'
+					&& $event['EventStartHour'] < 12
+				) {
 					$event['EventStartHour'] += 12;
 				}
-				if ( strtolower( $event['EventEndMeridian'] ) === 'pm' && $event['EventEndHour'] < 12 ) {
+				if (
+					isset( $event['EventEndMeridian'] )
+					&& strtolower( $event['EventEndMeridian'] ) === 'pm'
+					&& $event['EventEndHour'] < 12
+				) {
 					$event['EventEndHour'] += 12;
 				}
 
