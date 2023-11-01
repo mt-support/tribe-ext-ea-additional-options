@@ -122,14 +122,14 @@ class Options {
 				// If there is a meridian and it's "pm" then adjust times.
 				if (
 					isset( $event['EventStartMeridian'] )
-					&& strtolower( $event['EventStartMeridian'] ) === 'pm'
+					&& 'pm' === strtolower( $event['EventStartMeridian'] )
 					&& $event['EventStartHour'] < 12
 				) {
 					$event['EventStartHour'] += 12;
 				}
 				if (
 					isset( $event['EventEndMeridian'] )
-					&& strtolower( $event['EventEndMeridian'] ) === 'pm'
+					&& 'pm' === strtolower( $event['EventEndMeridian'] )
 					&& $event['EventEndHour'] < 12
 				) {
 					$event['EventEndHour'] += 12;
