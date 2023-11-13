@@ -99,10 +99,9 @@ class Options {
 			$timezone = str_replace( ' ', '_', trim( $meta['timezone'] ) );
 			$tz = new DateTimeZone( $timezone );
 
-			$target_offset = timezone_offset_get( $tz, new DateTime( 'now', $utc ) );
+			$target_offset = timezone_offset_get( $tz, new DateTime( $event['EventStartDate'], $utc ) );
 
-			$use_utc = empty( $event['EventUTCStartDate'] )
-			           && ! empty( $event['EventUTCStartDate'] )
+			$use_utc = ! empty( $event['EventUTCStartDate'] )
 			           && ! empty( $event['EventUTCEndDate'] );
 
 			$missing_event_details = empty( $event['EventStartDate'] )
@@ -120,8 +119,24 @@ class Options {
 			} else if ( $missing_event_details ) {
 				return $event;
 			} else {
+				// If there is a meridian and it's "pm" then adjust times.
+				if (
+					isset( $event['EventStartMeridian'] )
+					&& 'pm' === strtolower( $event['EventStartMeridian'] )
+					&& $event['EventStartHour'] < 12
+				) {
+					$event['EventStartHour'] += 12;
+				}
+				if (
+					isset( $event['EventEndMeridian'] )
+					&& 'pm' === strtolower( $event['EventEndMeridian'] )
+					&& $event['EventEndHour'] < 12
+				) {
+					$event['EventEndHour'] += 12;
+				}
+
 				$event['EventTimezone'] = str_replace( 'UTC', 'Etc/GMT', $event['EventTimezone'] );
-				$eventOffset            = timezone_offset_get( timezone_open( $event['EventTimezone'] ), new DateTime( 'now', $utc ) );
+				$eventOffset            = timezone_offset_get( timezone_open( $event['EventTimezone'] ), new DateTime( $event['EventStartDate'], $utc ) );
 				$currTimezone           = new DateTimeZone( $event['EventTimezone'] );
 				$start                  = new DateTime( $event['EventStartDate'] . ' ' . $event['EventStartHour'] . ':' . $event['EventStartMinute'], $currTimezone );
 				$end                    = new DateTime( $event['EventEndDate'] . ' ' . $event['EventEndHour'] . ':' . $event['EventEndMinute'], $currTimezone );
