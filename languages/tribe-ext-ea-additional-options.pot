@@ -1,18 +1,19 @@
-#, fuzzy
+# Copyright (C) 2024 The Events Calendar
+# This file is distributed under the GPL version 3 or any later version.
 msgid ""
 msgstr ""
-"Project-Id-Version: Event Aggregator Extension: Additional Options 1.4.0\n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
+"Project-Id-Version: Event Aggregator Extension: Additional Options 1.4.3\n"
+"Report-Msgid-Bugs-To: The Events Calendar <https://support.theeventscalendar.com>\n"
 "Last-Translator: \n"
 "Language-Team: The Events Calendar <support@theeventscalendar.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.2.2\n"
+"POT-Creation-Date: 2024-02-16T10:23:07+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.9.0\n"
+"X-Domain: tribe-ext-ea-additional-options\n"
 
-# Copyright (C) 2023 The Events Calendar
-# This file is distributed under the GPL version 3 or any later version.
 #. Plugin Name of the plugin
 msgid "Event Aggregator Extension: Additional Options"
 msgstr ""
@@ -30,7 +31,7 @@ msgid "The Events Calendar"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "http://evnt.is/1971"
+msgid "https://evnt.is/1971"
 msgstr ""
 
 #: src/Tribe/Bulk/Schedule_Imports.php:32
