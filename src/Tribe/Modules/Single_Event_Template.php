@@ -141,6 +141,15 @@ class Single_Event_Template {
 			);
 		}
 
+		// If there is a venue in the source, then change it in the template.
+		if ( isset( $event['EventVenueID'] ) ) {
+			$template = str_replace(
+				'<!-- wp:tribe/event-venue /-->',
+				'<!-- wp:tribe/event-venue {"venue":' . $event['EventVenueID'] . '} /-->',
+				$template
+			);
+		}
+
 		// Convert line breaks to paragraphs.
 		$search_line_breaks      = [
 			'(\n\n)',

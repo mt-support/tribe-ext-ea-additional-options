@@ -35,6 +35,7 @@ We're always interested in your feedback and our [Help Desk](https://support.the
 
 = [1.4.3] 2024-02-16 =
 
+* Fix - Adjust how Venues are handled in the block editor template to make sure they show up in the block editor.
 * Tweak - Add Meetup as a valid import source when using block editor template.
 * Tweak - Adjust import field mapping to make sure description is only removed when there is an alternative.
 
