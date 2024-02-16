@@ -56,6 +56,7 @@ class Single_Event_Template {
 			'ical',
 			'gcal',
 			'ics',
+			'meetup',
 		];
 
 		/**
