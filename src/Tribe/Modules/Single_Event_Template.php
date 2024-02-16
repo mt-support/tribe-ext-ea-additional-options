@@ -13,7 +13,7 @@ class Single_Event_Template {
 		 * 2. A template is set up.
 		 */
 		if ( tribe_is_truthy( $block_editor_enabled ) && $template_setting ) {
-			add_filter( 'tribe_aggregator_event_translate_service_data_field_map', [ $this, 'adjust_field_map' ] );
+			add_filter( 'tribe_aggregator_event_translate_service_data_field_map', [ $this, 'adjust_field_map' ], 10, 2 );
 			add_filter( 'tribe_aggregator_before_save_event', [ $this, 'tec_ea_single_event_template' ], 11, 2 );
 		}
 	}
@@ -22,14 +22,19 @@ class Single_Event_Template {
 	 * Adjust the field map.
 	 *
 	 * @param array $fieldMap The field map from the source to the event data.
+	 * @param $item
 	 *
 	 * @return array
 	 */
-	public function adjust_field_map( array $fieldMap ): array {
-		if ( isset( $fieldMap['description'] ) ) {
+	public function adjust_field_map( array $fieldMap, $item ): array {
+		if (
+			isset( $fieldMap['description'] )
+			&& isset( $item->unsafe_description )
+		) {
 			unset( $fieldMap['description'] );
+			$fieldMap['unsafe_description'] = 'post_content';
 		}
-		$fieldMap['unsafe_description'] = 'post_content';
+
 		$fieldMap['start_date_utc']     = 'EventUTCStartDate';
 		$fieldMap['end_date_utc']       = 'EventUTCEndDate';
 

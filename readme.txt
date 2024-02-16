@@ -33,6 +33,10 @@ We're always interested in your feedback and our [Help Desk](https://support.the
 
 == Changelog ==
 
+= [1.4.3] 2024-02-16 =
+
+* Tweak - Adjust import field mapping to make sure description is only removed when there is an alternative.
+
 = [1.4.2] 2023-11-01 =
 
 * Fix - Update so that DST changes are taken into account for time zone change calculations.
