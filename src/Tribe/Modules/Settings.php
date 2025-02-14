@@ -296,7 +296,7 @@ class Settings {
 			$tooltip = sprintf(
 			/* translators: %1$s: opening anchor tag; %2$s: closing anchor tag */
 				esc_html__( 'Please enable the block editor for events under %1$sEvents > Settings > General%2$s to be able to use this feature.', 'tribe-ext-ea-additional-options' ),
-				'<a href="' . admin_url( 'edit.php?page=tec-events-settings&tab=general&post_type=tribe_events#tec-settings-general-editing' ) . '">',
+				'<a href="' . admin_url( 'edit.php?page=tec-events-settings&tab=general-editing-tab&post_type=tribe_events' ) . '">',
 				'</a>'
 			);
 		}
