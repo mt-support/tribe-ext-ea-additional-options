@@ -3,10 +3,11 @@
 namespace Tribe\Extensions\EA_Additional_Options\Modules;
 
 use TEC\Common\Admin\Entities\Div;
-use Tribe\Utils\Element_Classes as Classes;
 use TEC\Common\Admin\Entities\Heading;
-use TEC\Common\Admin\Entities\Field_Wrapper;
 use TEC\Common\Admin\Entities\Container;
+use TEC\Common\Admin\Entities\Field_Wrapper;
+use Tribe\Utils\Element_Classes as Classes;
+
 /**
  * Do the Settings.
  */
@@ -41,6 +42,18 @@ class Settings {
 		add_filter( 'tribe_general_settings_maintenance_section', [ $this, 'add_maintenance_settings' ] );
 	}
 
+	/**
+	 * Add the settings fields for the additional options.
+	 *
+	 * @since 1.0.0
+	 * @since 1.4.0 Added setting for Block editor template.
+	 * @since 1.5.0 Renamed from `add_settings`.
+	 *              Updated logic for the new admin UI.
+	 *
+	 * @param array $fields The fields for the imports settings tab.
+	 *
+	 * @return array
+	 */
 	public function add_additional_options( $fields ) {
 		$content_block          = new Div( new Classes( [ 'tec-settings-form__content-section' ] ) );
 		$section_header_classes = new Classes( [ 'tec-settings-form__section-header', 'tec-settings-form__section-header--sub' ] );
@@ -144,7 +157,9 @@ class Settings {
 	}
 
 	/**
-	 * Get all draft events to show them as options in the dropdown.
+	 * Get all draft events to show them as options in the Block editor template dropdown.
+	 *
+	 * @since 1.4.0
 	 *
 	 * @return array
 	 */
@@ -176,6 +191,8 @@ class Settings {
 	 * Retrieve the attributes for the setting.
 	 * If block editor for events is not enabled, then disable the field.
 	 *
+	 * @since 1.4.0
+	 *
 	 * @return array
 	 */
 	private function get_template_attributes(): array {
@@ -192,7 +209,9 @@ class Settings {
 	}
 
 	/**
-	 * Retrieve the description of the setting.
+	 * Retrieve the description of the Block editor template setting.
+	 *
+	 * @since 1.4.0
 	 *
 	 * @return string
 	 */
@@ -230,6 +249,8 @@ class Settings {
 	/**
 	 * Add the extension's settings to the Maintenance page at the right spot.
 	 *
+	 * @since 1.5.0
+	 *
 	 * @param array $settings Array of settings.
 	 *
 	 * @return array
@@ -249,12 +270,14 @@ class Settings {
 	}
 
 	/**
-	 * Compile new settings fields.
+	 * Compile new settings fields for the Maintenance tab.
+	 *
+	 * @since 1.5.0
 	 *
 	 * @return array
 	 */
 	public function add_maintenance_settings_fields(): array {
-		$fields = [
+		return [
 			self::PREFIX . 'ignore_range' => [
 				'type'            => 'dropdown',
 				'label'           => esc_html__( 'Delete ignored events older than', 'tec-labs-remove-past-ignored-events' ),
@@ -295,7 +318,5 @@ class Settings {
 				],
 			],
 		];
-
-		return $fields;
 	}
 }
