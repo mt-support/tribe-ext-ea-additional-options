@@ -91,6 +91,7 @@ class Hooks extends Service_Provider {
 	 * @since 1.0.0
 	 */
 	protected function add_filters() {
+		add_filter( 'bulk_actions-edit-tribe_events', [ $this, 'modify_bulk_actions_label' ] );
 	}
 
 	/**
@@ -103,5 +104,21 @@ class Hooks extends Service_Provider {
 
 		// This will load `wp-content/languages/plugins` files first.
 		\Tribe__Main::instance()->load_text_domain( 'tribe-ext-extension-template', $mo_path );
+	}
+
+	/**
+	 * Modify the 'Move to trash' bulk action label.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @param array $bulk_actions Array of available bulk actions.
+	 *
+	 * @return array
+	 */
+	public function modify_bulk_actions_label( $bulk_actions ) {
+		if ( isset( $bulk_actions['trash'] ) ) {
+			$bulk_actions['trash'] = __( 'Move to Trash/Ignore', 'textdomain' );
+		}
+		return $bulk_actions;
 	}
 }
