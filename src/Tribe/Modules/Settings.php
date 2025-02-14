@@ -10,10 +10,14 @@ use Tribe\Utils\Element_Classes as Classes;
 
 /**
  * Do the Settings.
+ *
+ * @since 1.0.0
  */
 class Settings {
 	/**
 	 * The Settings Helper class.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @var Settings_Helper
 	 */
@@ -21,6 +25,8 @@ class Settings {
 
 	/**
 	 * The prefix for our settings keys.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @see get_options_prefix() Use this method to get this property's value.
 	 *
@@ -31,12 +37,21 @@ class Settings {
 	/**
 	 * Settings constructor.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param Settings_Helper $settings_helper
 	 */
 	public function __construct( Settings_Helper $settings_helper ) {
 		$this->settings_helper = $settings_helper;
 	}
 
+	/**
+	 * Running the hooks.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
 	public function hook() {
 		add_filter( 'tec_events_settings_tab_imports_fields', [ $this, 'add_additional_options' ] );
 		add_filter( 'tribe_general_settings_maintenance_section', [ $this, 'add_maintenance_settings' ] );
