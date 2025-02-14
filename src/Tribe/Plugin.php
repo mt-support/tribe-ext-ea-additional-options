@@ -7,7 +7,7 @@ use TEC\Common\Contracts\Service_Provider;
 /**
  * Class Plugin
  *
- * @since   __TRIBE_VERSION__
+ * @since 1.0.0
  *
  * @package Tribe\Extensions\EA_Additional_Options
  */
@@ -15,7 +15,7 @@ class Plugin extends Service_Provider {
 	/**
 	 * Stores the version for the plugin.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 *
 	 * @var string
 	 */
@@ -24,7 +24,7 @@ class Plugin extends Service_Provider {
 	/**
 	 * Stores the base slug for the plugin.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 *
 	 * @var string
 	 */
@@ -33,28 +33,28 @@ class Plugin extends Service_Provider {
 	/**
 	 * Stores the base slug for the extension.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 *
 	 * @var string
 	 */
 	const FILE = EA_ADDITIONAL_OPTIONS_FILE;
 
 	/**
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 *
 	 * @var string Plugin Directory.
 	 */
 	public $plugin_dir;
 
 	/**
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 *
 	 * @var string Plugin path.
 	 */
 	public $plugin_path;
 
 	/**
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 *
 	 * @var string Plugin URL.
 	 */
@@ -65,7 +65,7 @@ class Plugin extends Service_Provider {
 	 *
 	 * This always executes even if the required plugins are not present.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 */
 	public function register() {
 		// Set up the plugin provider properties.
@@ -87,7 +87,7 @@ class Plugin extends Service_Provider {
 	/**
 	 * Checks whether the plugin dependency manifest is satisfied or not.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 *
 	 * @return bool Whether the plugin dependency manifest is satisfied or not.
 	 */
@@ -100,7 +100,7 @@ class Plugin extends Service_Provider {
 	/**
 	 * Registers the plugin and dependency manifest among those managed by Tribe Common.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 */
 	protected function register_plugin_dependencies() {
 		$plugin_register = new Plugin_Register();

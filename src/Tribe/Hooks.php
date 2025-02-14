@@ -14,7 +14,7 @@
  *  remove_action( 'some_action', [ tribe( 'events-virtual.hooks' ), 'some_method' ] );
  * ```
  *
- * @since   __TRIBE_VERSION__
+ * @since 1.0.0
  *
  * @package Tribe\Extensions\EA_Additional_Options;
  */
@@ -37,7 +37,7 @@ use Tribe\Extensions\EA_Additional_Options\Modules\Single_Event_Template;
 /**
  * Class Hooks.
  *
- * @since   __TRIBE_VERSION__
+ * @since 1.0.0
  *
  * @package Tribe\Extensions\EA_Additional_Options;
  */
@@ -46,7 +46,7 @@ class Hooks extends Service_Provider {
 	/**
 	 * Binds and sets up implementations.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 */
 	public function register() {
 		$this->container->singleton( static::class, $this );
@@ -79,7 +79,7 @@ class Hooks extends Service_Provider {
 	/**
 	 * Adds the actions required by the plugin.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 */
 	protected function add_actions() {
 		add_action( 'tribe_load_text_domains', [ $this, 'load_text_domains' ] );
@@ -88,7 +88,7 @@ class Hooks extends Service_Provider {
 	/**
 	 * Adds the filters required by the plugin.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 */
 	protected function add_filters() {
 	}
@@ -96,7 +96,7 @@ class Hooks extends Service_Provider {
 	/**
 	 * Load text domain for localization of the plugin.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 */
 	public function load_text_domains() {
 		$mo_path = tribe( Plugin::class )->plugin_dir . 'languages/';
