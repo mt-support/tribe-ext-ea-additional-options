@@ -26,6 +26,7 @@ use Tribe\Extensions\EA_Additional_Options\Bulk\Schedule_Imports;
 use Tribe\Extensions\EA_Additional_Options\Bulk_Schedule_Import\View;
 use Tribe\Extensions\EA_Additional_Options\Modules\Delete_Duplicated_Events;
 use Tribe\Extensions\EA_Additional_Options\Modules\Line_Breaks;
+use Tribe\Extensions\EA_Additional_Options\Modules\Maintenance;
 use Tribe\Extensions\EA_Additional_Options\Modules\Options;
 use Tribe\Extensions\EA_Additional_Options\Modules\Other_Url;
 use Tribe\Extensions\EA_Additional_Options\Modules\Purge_Events;
@@ -59,6 +60,7 @@ class Hooks extends Service_Provider {
 		$this->container->singleton( Purge_Events::class, Purge_Events::class, [ 'hook' ] );
 		$this->container->singleton( Schedule_Imports::class, Schedule_Imports::class, [ 'hook' ] );
 		$this->container->singleton( Single_Event_Template::class, Single_Event_Template::class, [ 'hook' ] );
+		$this->container->singleton( Single_Event_Template::class, Maintenance::class, [ 'hook' ] );
 
 		$this->add_actions();
 		$this->add_filters();
