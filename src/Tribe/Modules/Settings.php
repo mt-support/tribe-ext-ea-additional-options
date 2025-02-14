@@ -255,7 +255,7 @@ class Settings {
 	 */
 	public function add_maintenance_settings_fields(): array {
 		$fields = [
-			self::PREFIX . 'ignore-range' => [
+			self::PREFIX . 'ignore_range' => [
 				'type'            => 'dropdown',
 				'label'           => esc_html__( 'Delete ignored events older than', 'tec-labs-remove-past-ignored-events' ),
 				'tooltip'         => 'Ignored events that are more than this many days past will be permanently deleted.',
@@ -271,7 +271,7 @@ class Settings {
 				],
 			],
 
-			self::PREFIX . 'ignore-limit' => [
+			self::PREFIX . 'ignore_limit' => [
 				'type'            => 'text',
 				'label'           => esc_html__( 'Ignored events deleted in one run', 'tec-labs-remove-past-ignored-events' ),
 				'tooltip'         => 'The number of ignored events that will be permanently deleted in one cron run. Note, setting this too high could exhaust server resources.',
@@ -280,7 +280,7 @@ class Settings {
 				'default'         => '15',
 			],
 
-			self::PREFIX . 'ignore-schedule' => [
+			self::PREFIX . 'ignore_schedule' => [
 				'type'            => 'dropdown',
 				'label'           => esc_html__( 'Cron schedule', 'tec-labs-remove-past-ignored-events' ),
 				'tooltip'         => 'A batch of ignored events will be deleted this often.',
