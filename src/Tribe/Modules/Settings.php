@@ -38,6 +38,7 @@ class Settings {
 
 	public function hook() {
 		add_filter( 'tec_events_settings_tab_imports_fields', [ $this, 'add_additional_options' ] );
+		add_filter( 'tribe_general_settings_maintenance_section', [ $this, 'add_maintenance_settings' ] );
 	}
 
 	public function add_additional_options( $fields ) {
@@ -224,5 +225,77 @@ class Settings {
 		}
 
 		return $tooltip;
+	}
+
+	/**
+	 * Add the extension's settings to the Maintenance page at the right spot.
+	 *
+	 * @param array $settings Array of settings.
+	 *
+	 * @return array
+	 */
+	public function add_maintenance_settings( array $settings ): array {
+		$new_settings = [];
+
+		foreach ( $settings as $key => $value ) {
+			$new_settings[ $key ] = $value;
+
+			if ( $key === 'trash-past-events' ) {
+				$new_settings = array_merge( $new_settings, $this->add_maintenance_settings_fields() );
+			}
+		}
+
+		return $new_settings;
+	}
+
+	/**
+	 * Compile new settings fields.
+	 *
+	 * @return array
+	 */
+	public function add_maintenance_settings_fields(): array {
+		$fields = [
+			self::PREFIX . 'ignore-range' => [
+				'type'            => 'dropdown',
+				'label'           => esc_html__( 'Delete ignored events older than', 'tec-labs-remove-past-ignored-events' ),
+				'tooltip'         => 'Ignored events that are more than this many days past will be permanently deleted.',
+				'validation_type' => 'options',
+				'size'            => 'small',
+				'default'         => null,
+				'options'         => [
+					null => esc_html__( 'Disabled', 'tec-labs-remove-past-ignored-events' ),
+					1    => esc_html__( '1 day', 'tec-labs-remove-past-ignored-events' ),
+					7    => esc_html__( '7 days', 'tec-labs-remove-past-ignored-events' ),
+					14   => esc_html__( '14 days', 'tec-labs-remove-past-ignored-events' ),
+					30   => esc_html__( '30 days', 'tec-labs-remove-past-ignored-events' ),
+				],
+			],
+
+			self::PREFIX . 'ignore-limit' => [
+				'type'            => 'text',
+				'label'           => esc_html__( 'Ignored events deleted in one run', 'tec-labs-remove-past-ignored-events' ),
+				'tooltip'         => 'The number of ignored events that will be permanently deleted in one cron run. Note, setting this too high could exhaust server resources.',
+				'validation_type' => 'positive_int',
+				'size'            => 'small',
+				'default'         => '15',
+			],
+
+			self::PREFIX . 'ignore-schedule' => [
+				'type'            => 'dropdown',
+				'label'           => esc_html__( 'Cron schedule', 'tec-labs-remove-past-ignored-events' ),
+				'tooltip'         => 'A batch of ignored events will be deleted this often.',
+				'validation_type' => 'options',
+				'size'            => 'small',
+				'default'         => 'daily',
+				'options'         => [
+					'hourly'     => esc_html__( 'Hourly', 'tec-labs-remove-past-ignored-events' ),
+					'twicedaily' => esc_html__( 'Twice a day', 'tec-labs-remove-past-ignored-events' ),
+					'daily'      => esc_html__( 'Daily', 'tec-labs-remove-past-ignored-events' ),
+					'weekly'     => esc_html__( 'Weekly', 'tec-labs-remove-past-ignored-events' ),
+				],
+			],
+		];
+
+		return $fields;
 	}
 }
