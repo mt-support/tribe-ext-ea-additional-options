@@ -92,6 +92,8 @@ class Hooks extends Service_Provider {
 	 */
 	protected function add_filters() {
 		add_filter( 'bulk_actions-edit-tribe_events', [ $this, 'modify_bulk_actions_label' ] );
+
+		add_action( 'manage_posts_extra_tablenav', [ $this, 'tec_ea_empty_ignored_button' ] );
 	}
 
 	/**
@@ -103,7 +105,7 @@ class Hooks extends Service_Provider {
 		$mo_path = tribe( Plugin::class )->plugin_dir . 'languages/';
 
 		// This will load `wp-content/languages/plugins` files first.
-		\Tribe__Main::instance()->load_text_domain( 'tribe-ext-extension-template', $mo_path );
+		\Tribe__Main::instance()->load_text_domain( 'tribe-ext-ea-additional-options', $mo_path );
 	}
 
 	/**
@@ -117,8 +119,24 @@ class Hooks extends Service_Provider {
 	 */
 	public function modify_bulk_actions_label( $bulk_actions ) {
 		if ( isset( $bulk_actions['trash'] ) ) {
-			$bulk_actions['trash'] = __( 'Move to Trash/Ignore', 'textdomain' );
+			$bulk_actions['trash'] = __( 'Move to Trash/Ignore', 'tribe-ext-ea-additional-options' );
 		}
 		return $bulk_actions;
+	}
+
+	/**
+	 * Create a "Permanently Delete All Ignored Events" button on the Ignored Events page.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return void
+	 */
+	public function tec_ea_empty_ignored_button(): void {
+		if (
+			tec_get_request_var( 'post_type') === 'tribe_events'
+			&& tec_get_request_var( 'post_status' ) === 'tribe-ignored'
+		) {
+			submit_button( __( 'Permanently Delete All', 'the-events-calendar' ), 'apply', 'delete_all', false );
+		}
 	}
 }
