@@ -8,7 +8,8 @@ class Single_Event_Template {
 		$template_setting     = tribe_get_option( Settings::PREFIX . 'default_template', false );
 		$block_editor_enabled = tribe_get_option( 'toggle_blocks_editor', null );
 
-		/** Make sure it only runs if:
+		/**
+		 * Make sure it only runs if:
 		 * 1. The block editor for events is enabled.
 		 * 2. A template is set up.
 		 */
@@ -21,24 +22,24 @@ class Single_Event_Template {
 	/**
 	 * Adjust the field map.
 	 *
-	 * @param array $fieldMap The field map from the source to the event data.
-	 * @param $item
+	 * @param array  $field_map The field map from the source to the event data.
+	 * @param object $item      Item being translated.
 	 *
 	 * @return array
 	 */
-	public function adjust_field_map( array $fieldMap, $item ): array {
+	public function adjust_field_map( array $field_map, object $item ): array {
 		if (
-			isset( $fieldMap['description'] )
+			isset( $field_map['description'] )
 			&& isset( $item->unsafe_description )
 		) {
-			unset( $fieldMap['description'] );
-			$fieldMap['unsafe_description'] = 'post_content';
+			unset( $field_map['description'] );
+			$field_map['unsafe_description'] = 'post_content';
 		}
 
-		$fieldMap['start_date_utc']     = 'EventUTCStartDate';
-		$fieldMap['end_date_utc']       = 'EventUTCEndDate';
+		$field_map['start_date_utc'] = 'EventUTCStartDate';
+		$field_map['end_date_utc']   = 'EventUTCEndDate';
 
-		return $fieldMap;
+		return $field_map;
 	}
 
 	/**
@@ -142,7 +143,11 @@ class Single_Event_Template {
 		}
 
 		// If there is a venue in the source, then change it in the template.
-		if ( isset( $event['EventVenueID'] ) ) {
+		if (
+			! empty( $event['EventVenueID'] )
+			&& intval( $event['EventVenueID'] )
+			&& get_post_type( $event['EventVenueID'] ) === 'tribe_venue'
+		) {
 			$template = str_replace(
 				'<!-- wp:tribe/event-venue /-->',
 				'<!-- wp:tribe/event-venue {"venue":' . $event['EventVenueID'] . '} /-->',
