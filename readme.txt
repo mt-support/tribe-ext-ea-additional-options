@@ -38,6 +38,9 @@ We're always interested in your feedback and our [Help Desk](https://support.the
 * Feature - Add setting to automatically delete past ignored events.
 * Tweak - Adjust the 'Move to trash' label to 'Move to trash/ignore' correctly reflect the handling of imported events.
 * Tweak - Adjust styling of the settings so it matches the new admin UI.
+* Fix - Adjust how Venues are handled in the block editor template to make sure they show up in the block editor.
+* Tweak - Add Meetup as a valid import source when using block editor template.
+* Tweak - Adjust import field mapping to make sure description is only removed when there is an alternative.
 
 = [1.4.2] 2023-11-01 =
 
