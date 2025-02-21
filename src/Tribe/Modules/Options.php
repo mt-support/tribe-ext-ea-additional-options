@@ -87,6 +87,17 @@ class Options {
 		return $event;
 	}
 
+	/**
+	 * Adjust the time zone of imported events.
+	 *
+	 * @since 1.2.0
+	 * @since 1.5.0 Change the logic of checking the meridian.
+	 *
+	 * @param array $event The data of the imported event.
+	 * @param array $meta  Metadata of the imported event.
+	 *
+	 * @return mixed
+	 */
 	private function adjust_timezone( $event, $meta ) {
 		if ( ! empty( $event['EventAllDay'] ) && tribe_is_truthy( $event['EventAllDay'] ) ) {
 			$event['EventTimezone'] = $meta['timezone'];
