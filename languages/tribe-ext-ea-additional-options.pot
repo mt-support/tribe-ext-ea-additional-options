@@ -1,36 +1,41 @@
-# Copyright (C) 2024 The Events Calendar
+# Copyright (C) 2025 The Events Calendar
 # This file is distributed under the GPL version 3 or any later version.
 msgid ""
 msgstr ""
-"Project-Id-Version: Event Aggregator Extension: Additional Options 1.4.3\n"
-"Report-Msgid-Bugs-To: The Events Calendar <https://support.theeventscalendar.com>\n"
-"Last-Translator: \n"
-"Language-Team: The Events Calendar <support@theeventscalendar.com>\n"
+"Project-Id-Version: Event Aggregator Extension: Additional Options 1.5.0\n"
+"Report-Msgid-Bugs-To: The Events Calendar <https://support.theeventscalendar.com/>\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-02-16T10:23:07+00:00\n"
+"POT-Creation-Date: 2025-02-21T14:08:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.9.0\n"
+"X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: tribe-ext-ea-additional-options\n"
 
 #. Plugin Name of the plugin
+#: tribe-ext-ea-additional-options.php
 msgid "Event Aggregator Extension: Additional Options"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: tribe-ext-ea-additional-options.php
 msgid "https://theeventscalendar.com/extensions/ea-additional-options/"
 msgstr ""
 
 #. Description of the plugin
+#: tribe-ext-ea-additional-options.php
 msgid "Adds extra options to Event Aggregator settings and imports"
 msgstr ""
 
 #. Author of the plugin
+#: tribe-ext-ea-additional-options.php
 msgid "The Events Calendar"
 msgstr ""
 
 #. Author URI of the plugin
+#: tribe-ext-ea-additional-options.php
 msgid "https://evnt.is/1971"
 msgstr ""
 
@@ -115,93 +120,93 @@ msgstr ""
 msgid "two years"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:47
+#: src/Tribe/Modules/Settings.php:101
 msgid "Additional Options"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:51
+#: src/Tribe/Modules/Settings.php:107
 msgid "Delete Duplicate/Removed Events for Scheduled Imports"
 msgstr ""
 
 #. translators: %1$s: opening strong tag; %2$s: closing strong tag
-#: src/Tribe/Modules/Settings.php:54
+#: src/Tribe/Modules/Settings.php:110
 msgid "Check this box to delete events that are removed from the import source. This will also remove duplicates in the case where the source changes the unique identifier for an event. %1$sNOTE: If your \"Event Update Authority\" setting is \"Do not re-import events...\", this setting will have no effect.%2$s"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:63
+#: src/Tribe/Modules/Settings.php:119
 msgid "Do not delete duplicate/removed events."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:64
+#: src/Tribe/Modules/Settings.php:120
 msgid "Send duplicate/removed events to trash."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:65
+#: src/Tribe/Modules/Settings.php:121
 msgid "Permanently delete duplicate/removed events."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:70
+#: src/Tribe/Modules/Settings.php:126
 msgid "Link Directly to Website URL, Bypassing Default Event Page"
 msgstr ""
 
 #. translators: %1$s: opening strong tag; %2$s: closing strong tag
-#: src/Tribe/Modules/Settings.php:73
+#: src/Tribe/Modules/Settings.php:129
 msgid "Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field. %1$sNOTE: This setting only affects legacy views and will not work in the upgraded views.%2$s"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:80
+#: src/Tribe/Modules/Settings.php:136
 msgid "Link to the default single event page."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:81
+#: src/Tribe/Modules/Settings.php:137
 msgid "Link directly to the event website URL"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:86
+#: src/Tribe/Modules/Settings.php:142
 msgid "Retain Line Breaks in Event Description"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:87
+#: src/Tribe/Modules/Settings.php:143
 msgid "Some import sources allow for linebreaks. Choose whether to remove linebreaks or keep them."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:91
+#: src/Tribe/Modules/Settings.php:147
 msgid "Remove all line breaks from event descriptions."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:92
+#: src/Tribe/Modules/Settings.php:148
 msgid "Retain all line breaks within event descriptions."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:97
+#: src/Tribe/Modules/Settings.php:153
 msgid "Block editor template"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:129
+#: src/Tribe/Modules/Settings.php:190
 msgid "The block editor for events is disabled!"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:133
+#: src/Tribe/Modules/Settings.php:194
 msgid "None (default)"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:134
+#: src/Tribe/Modules/Settings.php:195
 msgid "Simple"
 msgstr ""
 
 #. translators: %1$s: opening code tag; %2$s: closing code tag; %3$s: opening strong tag; %s$4: closing strong tag
-#: src/Tribe/Modules/Settings.php:174
+#: src/Tribe/Modules/Settings.php:239
 msgid "Select the draft event post to be used as a template. The post should only have the block structure and no content. Place %1$s[tec_ea_content]%2$s in a %3$sparagraph block%4$s where you want the description of the imported event to show up."
 msgstr ""
 
 #. translators: %1$s: opening strong tag; %2$s: closing strong tag
-#: src/Tribe/Modules/Settings.php:183
+#: src/Tribe/Modules/Settings.php:248
 msgid "%1$sNOTE: If you are using a template, the \"Retain Line Breaks ...\" setting will have no effect. Line breaks will be retained.%2$s"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag; %2$s: closing anchor tag
-#: src/Tribe/Modules/Settings.php:190
-msgid "Please enable the block editor for events under %1$sEvents > Settings > General%2$s to be able to use this feature."
+#: src/Tribe/Modules/Settings.php:255
+msgid "Please enable the block editor for events under %1$sEvents > Settings > General > Editing%2$s to be able to use this feature."
 msgstr ""
 
 #: tribe-ext-ea-additional-options.php:43
