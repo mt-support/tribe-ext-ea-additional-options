@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-21T14:08:28+00:00\n"
+"POT-Creation-Date: 2025-02-21T14:31:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: tribe-ext-ea-additional-options\n"
@@ -94,6 +94,10 @@ msgstr ""
 
 #: src/Tribe/Bulk/Schedule_Imports.php:47
 msgid "Delete Upcoming Events"
+msgstr ""
+
+#: src/Tribe/Hooks.php:122
+msgid "Move to Trash/Ignore"
 msgstr ""
 
 #: src/Tribe/Modules/Other_Url.php:20

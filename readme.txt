@@ -36,6 +36,7 @@ We're always interested in your feedback and our [Help Desk](https://support.the
 = [1.5.0] 2025-02-17 =
 
 * Feature - Add setting to automatically delete past ignored events.
+* Feature - Add a 'Permanenetly delete all' button to the ignored view of events.
 * Tweak - Adjust the 'Move to trash' label to 'Move to trash/ignore' correctly reflect the handling of imported events.
 * Tweak - Adjust styling of the settings so it matches the new admin UI.
 * Fix - Adjust how Venues are handled in the block editor template to make sure they show up in the block editor.
