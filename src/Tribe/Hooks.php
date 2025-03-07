@@ -60,7 +60,7 @@ class Hooks extends Service_Provider {
 		$this->container->singleton( Purge_Events::class, Purge_Events::class, [ 'hook' ] );
 		$this->container->singleton( Schedule_Imports::class, Schedule_Imports::class, [ 'hook' ] );
 		$this->container->singleton( Single_Event_Template::class, Single_Event_Template::class, [ 'hook' ] );
-		$this->container->singleton( Single_Event_Template::class, Maintenance::class, [ 'hook' ] );
+		$this->container->singleton( Maintenance::class, Maintenance::class, [ 'hook' ] );
 
 		$this->add_actions();
 		$this->add_filters();
