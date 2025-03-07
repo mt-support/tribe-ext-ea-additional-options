@@ -229,6 +229,7 @@ class Settings {
 	 * Retrieve the description of the Block editor template setting.
 	 *
 	 * @since 1.4.0
+	 * @since 1.5.0 Updated tooltip text and link for enabling the block editor.
 	 *
 	 * @return string
 	 */
