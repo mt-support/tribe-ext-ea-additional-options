@@ -48,7 +48,7 @@ class Settings {
 	/**
 	 * Running the hooks.
 	 *
-	 * @since 1.0.0
+	 * @since 1.5.0 Updated filter for additional options settings and added a maintenance section.
 	 *
 	 * @return void
 	 */
