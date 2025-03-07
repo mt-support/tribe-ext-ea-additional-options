@@ -59,7 +59,7 @@ class Maintenance {
 		}
 
 		$range = '-' . $range . ' days';
-		$limit = tribe_get_option( Settings::PREFIX . 'ignore_limit', 15 );
+		$limit = (int) tribe_get_option( Settings::PREFIX . 'ignore_limit', 15 );
 
 		$result = tribe_events()
 			->where( 'post_status', 'tribe-ignored')
