@@ -27,7 +27,8 @@ class Maintenance {
 			|| $schedule !== $set_schedule
 			   && $set_schedule
 		) {
-			$timestamp = wp_next_scheduled('tec_delete_old_ignored_events_cron');
+			$timestamp = wp_next_scheduled( 'tec_delete_old_ignored_events_cron' );
+
 			wp_unschedule_event( $timestamp, 'tec_delete_old_ignored_events_cron' );
 		}
 
