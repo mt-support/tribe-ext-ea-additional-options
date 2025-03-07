@@ -71,7 +71,7 @@ class Maintenance {
 			->get_ids();
 
 		foreach ( $result as $event_id ) {
-			$event_id = \TEC\Events\Custom_Tables\V1\Models\Occurrence::normalize_id ( $event_id );
+			$event_id = Occurrence::normalize_id( $event_id );
 			wp_delete_post( $event_id, true );
 		}
 	}
