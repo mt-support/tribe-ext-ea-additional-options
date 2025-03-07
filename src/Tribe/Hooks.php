@@ -47,6 +47,7 @@ class Hooks extends Service_Provider {
 	 * Binds and sets up implementations.
 	 *
 	 * @since 1.0.0
+	 * @since 1.5.0 Added Maintenance singleton.
 	 */
 	public function register() {
 		$this->container->singleton( static::class, $this );
