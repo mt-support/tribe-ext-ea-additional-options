@@ -11,7 +11,8 @@ class Maintenance {
 	/**
 	 * Set up a cron job to delete old ignored events.
 	 *
-	 * @since 1.0.0
+	 * @since 1.5.0
+
 	 *
 	 * @return void
 	 */
