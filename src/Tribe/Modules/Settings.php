@@ -79,6 +79,8 @@ class Settings {
 		 * This will take the container and an array of fields, and the fields will all be
 		 * wrapped in a Field_Wrapper object and added to the container.
 		 *
+		 * @since 1.5.0
+		 *
 		 * @param Container $container The container to add the fields to.
 		 * @param array     $fields    Array of field data.
 		 *
