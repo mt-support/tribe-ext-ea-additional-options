@@ -89,6 +89,7 @@ class Hooks extends Service_Provider {
 	 * Adds the filters required by the plugin.
 	 *
 	 * @since 1.0.0
+	 * @since 1.5.0 Added filter to inject a trash option to the bulk actions.
 	 */
 	protected function add_filters() {
 		add_filter( 'bulk_actions-edit-tribe_events', [ $this, 'modify_bulk_actions_label' ] );
