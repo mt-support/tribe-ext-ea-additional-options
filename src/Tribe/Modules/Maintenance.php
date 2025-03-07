@@ -2,6 +2,8 @@
 
 namespace Tribe\Extensions\EA_Additional_Options\Modules;
 
+use TEC\Events\Custom_Tables\V1\Models\Occurrence;
+
 class Maintenance {
 	public function hook() {
 		add_action( 'init', [ $this, 'cron_setup' ] );
