@@ -303,12 +303,12 @@ class Settings {
 				'validation_type' => 'options',
 				'size'            => 'small',
 				'default'         => null,
-				'options'         => [
-					null => esc_html__( 'Disabled', 'tec-labs-remove-past-ignored-events' ),
-					1    => esc_html__( '1 day', 'tec-labs-remove-past-ignored-events' ),
-					7    => esc_html__( '7 days', 'tec-labs-remove-past-ignored-events' ),
-					14   => esc_html__( '14 days', 'tec-labs-remove-past-ignored-events' ),
-					30   => esc_html__( '30 days', 'tec-labs-remove-past-ignored-events' ),
+				'options' => [
+					0  => esc_html__( 'Disabled', 'tec-labs-remove-past-ignored-events' ),
+					1  => esc_html__( '1 day', 'tec-labs-remove-past-ignored-events' ),
+					7  => esc_html__( '7 days', 'tec-labs-remove-past-ignored-events' ),
+					14 => esc_html__( '14 days', 'tec-labs-remove-past-ignored-events' ),
+					30 => esc_html__( '30 days', 'tec-labs-remove-past-ignored-events' ),
 				],
 			],
 

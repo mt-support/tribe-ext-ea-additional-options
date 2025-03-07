@@ -19,15 +19,17 @@ class Maintenance {
 	 * @return void
 	 */
 	public function cron_setup() {
-		$range        = tribe_get_option( Settings::PREFIX . 'ignore_range', null );
+		$range        = (int) tribe_get_option( Settings::PREFIX . 'ignore_range', 0 );
 		$schedule     = tribe_get_option( Settings::PREFIX . 'ignore_schedule', 'daily' );
 		$set_schedule = wp_get_schedule( 'tec_delete_old_ignored_events_cron' );
 
-		// Delete the cron if setting is disabled or the schedule changed, and it's not manually run.
+		// Delete the cron if setting is disabled, or the schedule changed and it's not manually run.
 		if (
-			empty( $range )
-			|| $schedule !== $set_schedule
-			   && $set_schedule
+			$range === 0
+			|| (
+				$schedule !== $set_schedule
+				&& $set_schedule
+			)
 		) {
 			$timestamp = wp_next_scheduled( 'tec_delete_old_ignored_events_cron' );
 
@@ -53,10 +55,10 @@ class Maintenance {
 	 * @return void
 	 */
 	public function delete_ignored_events() {
-		$range = tribe_get_option( Settings::PREFIX . 'ignore_range', 14 );
+		$range = (int) tribe_get_option( Settings::PREFIX . 'ignore_range', 14 );
 
 		// Bail if setting is disabled. Just in case.
-		if ( empty( $range ) ) {
+		if ( $range === 0 ) {
 			return;
 		}
 
