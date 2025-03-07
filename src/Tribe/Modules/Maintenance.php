@@ -46,6 +46,8 @@ class Maintenance {
 	/**
 	 * Delete ignored events that have been ignored for more than 30 days.
 	 *
+	 * @since 1.5.0
+	 *
 	 * @return void
 	 */
 	public function delete_ignored_events() {
