@@ -145,7 +145,7 @@ class Single_Event_Template {
 		// If there is a venue in the source, then change it in the template.
 		if (
 			! empty( $event['EventVenueID'] )
-			&& intval( $event['EventVenueID'] )
+			&& intval( $event['EventVenueID'] ) > 0
 			&& get_post_type( $event['EventVenueID'] ) === 'tribe_venue'
 		) {
 			$template = str_replace(
