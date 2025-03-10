@@ -75,6 +75,7 @@ class Hooks extends Service_Provider {
 		tribe( Purge_Events::class );
 		tribe( Schedule_Imports::class );
 		tribe( Single_Event_Template::class );
+		tribe( Maintenance::class );
 	}
 
 	/**
