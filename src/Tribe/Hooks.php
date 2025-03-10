@@ -138,7 +138,7 @@ class Hooks extends Service_Provider {
 			tec_get_request_var( 'post_type') === 'tribe_events'
 			&& tec_get_request_var( 'post_status' ) === 'tribe-ignored'
 		) {
-			submit_button( __( 'Permanently Delete All', 'the-events-calendar' ), 'apply', 'delete_all', false );
+			submit_button( __( 'Permanently Delete All', 'tribe-ext-ea-additional-options' ), 'apply', 'delete_all', false );
 		}
 	}
 }
