@@ -33,11 +33,11 @@ We're always interested in your feedback and our [Help Desk](https://support.the
 
 == Changelog ==
 
-= [1.5.0] 2025-02-17 =
+= [1.5.0] 2025-03-10 =
 
 * Feature - Add setting to automatically delete past ignored events.
-* Feature - Add a 'Permanenetly delete all' button to the ignored view of events.
-* Tweak - Adjust the 'Move to trash' label to 'Move to trash/ignore' correctly reflect the handling of imported events.
+* Feature - Add a 'Permanently delete all' button to the ignored view of events.
+* Tweak - Adjust the 'Move to trash' label in the bulk options dropdown to 'Move to trash/ignore' to correctly reflect the handling of imported events.
 * Tweak - Adjust styling of the settings so it matches the new admin UI.
 * Fix - Adjust how Venues are handled in the block editor template to make sure they show up in the block editor.
 * Tweak - Add Meetup as a valid import source when using block editor template.
