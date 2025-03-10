@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-02-21T14:32:42+00:00\n"
+"POT-Creation-Date: 2025-03-10T10:39:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: tribe-ext-ea-additional-options\n"
@@ -96,8 +96,12 @@ msgstr ""
 msgid "Delete Upcoming Events"
 msgstr ""
 
-#: src/Tribe/Hooks.php:122
+#: src/Tribe/Hooks.php:124
 msgid "Move to Trash/Ignore"
+msgstr ""
+
+#: src/Tribe/Hooks.php:141
+msgid "Permanently Delete All"
 msgstr ""
 
 #: src/Tribe/Modules/Other_Url.php:20
@@ -124,92 +128,92 @@ msgstr ""
 msgid "two years"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:101
+#: src/Tribe/Modules/Settings.php:103
 msgid "Additional Options"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:107
+#: src/Tribe/Modules/Settings.php:109
 msgid "Delete Duplicate/Removed Events for Scheduled Imports"
 msgstr ""
 
 #. translators: %1$s: opening strong tag; %2$s: closing strong tag
-#: src/Tribe/Modules/Settings.php:110
+#: src/Tribe/Modules/Settings.php:112
 msgid "Check this box to delete events that are removed from the import source. This will also remove duplicates in the case where the source changes the unique identifier for an event. %1$sNOTE: If your \"Event Update Authority\" setting is \"Do not re-import events...\", this setting will have no effect.%2$s"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:119
+#: src/Tribe/Modules/Settings.php:121
 msgid "Do not delete duplicate/removed events."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:120
+#: src/Tribe/Modules/Settings.php:122
 msgid "Send duplicate/removed events to trash."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:121
+#: src/Tribe/Modules/Settings.php:123
 msgid "Permanently delete duplicate/removed events."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:126
+#: src/Tribe/Modules/Settings.php:128
 msgid "Link Directly to Website URL, Bypassing Default Event Page"
 msgstr ""
 
 #. translators: %1$s: opening strong tag; %2$s: closing strong tag
-#: src/Tribe/Modules/Settings.php:129
+#: src/Tribe/Modules/Settings.php:131
 msgid "Instead of linking to the Event page within The Events Calendar, enable this option so that visitors can be sent directly to the URL in the Website URL field. %1$sNOTE: This setting only affects legacy views and will not work in the upgraded views.%2$s"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:136
+#: src/Tribe/Modules/Settings.php:138
 msgid "Link to the default single event page."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:137
+#: src/Tribe/Modules/Settings.php:139
 msgid "Link directly to the event website URL"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:142
+#: src/Tribe/Modules/Settings.php:144
 msgid "Retain Line Breaks in Event Description"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:143
+#: src/Tribe/Modules/Settings.php:145
 msgid "Some import sources allow for linebreaks. Choose whether to remove linebreaks or keep them."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:147
+#: src/Tribe/Modules/Settings.php:149
 msgid "Remove all line breaks from event descriptions."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:148
+#: src/Tribe/Modules/Settings.php:150
 msgid "Retain all line breaks within event descriptions."
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:153
+#: src/Tribe/Modules/Settings.php:155
 msgid "Block editor template"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:190
+#: src/Tribe/Modules/Settings.php:192
 msgid "The block editor for events is disabled!"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:194
+#: src/Tribe/Modules/Settings.php:196
 msgid "None (default)"
 msgstr ""
 
-#: src/Tribe/Modules/Settings.php:195
+#: src/Tribe/Modules/Settings.php:197
 msgid "Simple"
 msgstr ""
 
 #. translators: %1$s: opening code tag; %2$s: closing code tag; %3$s: opening strong tag; %s$4: closing strong tag
-#: src/Tribe/Modules/Settings.php:239
+#: src/Tribe/Modules/Settings.php:242
 msgid "Select the draft event post to be used as a template. The post should only have the block structure and no content. Place %1$s[tec_ea_content]%2$s in a %3$sparagraph block%4$s where you want the description of the imported event to show up."
 msgstr ""
 
 #. translators: %1$s: opening strong tag; %2$s: closing strong tag
-#: src/Tribe/Modules/Settings.php:248
+#: src/Tribe/Modules/Settings.php:251
 msgid "%1$sNOTE: If you are using a template, the \"Retain Line Breaks ...\" setting will have no effect. Line breaks will be retained.%2$s"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag; %2$s: closing anchor tag
-#: src/Tribe/Modules/Settings.php:255
+#: src/Tribe/Modules/Settings.php:258
 msgid "Please enable the block editor for events under %1$sEvents > Settings > General > Editing%2$s to be able to use this feature."
 msgstr ""
 
