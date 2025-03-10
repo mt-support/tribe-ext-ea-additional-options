@@ -14,7 +14,7 @@
  *  remove_action( 'some_action', [ tribe( 'events-virtual.hooks' ), 'some_method' ] );
  * ```
  *
- * @since   __TRIBE_VERSION__
+ * @since 1.0.0
  *
  * @package Tribe\Extensions\EA_Additional_Options;
  */
@@ -26,6 +26,7 @@ use Tribe\Extensions\EA_Additional_Options\Bulk\Schedule_Imports;
 use Tribe\Extensions\EA_Additional_Options\Bulk_Schedule_Import\View;
 use Tribe\Extensions\EA_Additional_Options\Modules\Delete_Duplicated_Events;
 use Tribe\Extensions\EA_Additional_Options\Modules\Line_Breaks;
+use Tribe\Extensions\EA_Additional_Options\Modules\Maintenance;
 use Tribe\Extensions\EA_Additional_Options\Modules\Options;
 use Tribe\Extensions\EA_Additional_Options\Modules\Other_Url;
 use Tribe\Extensions\EA_Additional_Options\Modules\Purge_Events;
@@ -36,7 +37,7 @@ use Tribe\Extensions\EA_Additional_Options\Modules\Single_Event_Template;
 /**
  * Class Hooks.
  *
- * @since   __TRIBE_VERSION__
+ * @since 1.0.0
  *
  * @package Tribe\Extensions\EA_Additional_Options;
  */
@@ -45,7 +46,8 @@ class Hooks extends Service_Provider {
 	/**
 	 * Binds and sets up implementations.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
+	 * @since 1.5.0 Added Maintenance singleton.
 	 */
 	public function register() {
 		$this->container->singleton( static::class, $this );
@@ -59,6 +61,7 @@ class Hooks extends Service_Provider {
 		$this->container->singleton( Purge_Events::class, Purge_Events::class, [ 'hook' ] );
 		$this->container->singleton( Schedule_Imports::class, Schedule_Imports::class, [ 'hook' ] );
 		$this->container->singleton( Single_Event_Template::class, Single_Event_Template::class, [ 'hook' ] );
+		$this->container->singleton( Maintenance::class, Maintenance::class, [ 'hook' ] );
 
 		$this->add_actions();
 		$this->add_filters();
@@ -72,34 +75,70 @@ class Hooks extends Service_Provider {
 		tribe( Purge_Events::class );
 		tribe( Schedule_Imports::class );
 		tribe( Single_Event_Template::class );
+		tribe( Maintenance::class );
 	}
 
 	/**
 	 * Adds the actions required by the plugin.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
+	 * @since 1.5.0 Added filter to inject a trash option to the bulk actions.
 	 */
 	protected function add_actions() {
 		add_action( 'tribe_load_text_domains', [ $this, 'load_text_domains' ] );
+		add_action( 'manage_posts_extra_tablenav', [ $this, 'tec_ea_empty_ignored_button' ] );
 	}
 
 	/**
 	 * Adds the filters required by the plugin.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 */
 	protected function add_filters() {
+		add_filter( 'bulk_actions-edit-tribe_events', [ $this, 'modify_bulk_actions_label' ] );
 	}
 
 	/**
 	 * Load text domain for localization of the plugin.
 	 *
-	 * @since __TRIBE_VERSION__
+	 * @since 1.0.0
 	 */
 	public function load_text_domains() {
 		$mo_path = tribe( Plugin::class )->plugin_dir . 'languages/';
 
 		// This will load `wp-content/languages/plugins` files first.
-		\Tribe__Main::instance()->load_text_domain( 'tribe-ext-extension-template', $mo_path );
+		\Tribe__Main::instance()->load_text_domain( 'tribe-ext-ea-additional-options', $mo_path );
+	}
+
+	/**
+	 * Modify the 'Move to trash' bulk action label.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @param array $bulk_actions Array of available bulk actions.
+	 *
+	 * @return array
+	 */
+	public function modify_bulk_actions_label( $bulk_actions ) {
+		if ( isset( $bulk_actions['trash'] ) ) {
+			$bulk_actions['trash'] = __( 'Move to Trash/Ignore', 'tribe-ext-ea-additional-options' );
+		}
+		return $bulk_actions;
+	}
+
+	/**
+	 * Create a "Permanently Delete All Ignored Events" button on the Ignored Events page.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return void
+	 */
+	public function tec_ea_empty_ignored_button(): void {
+		if (
+			tec_get_request_var( 'post_type') === 'tribe_events'
+			&& tec_get_request_var( 'post_status' ) === 'tribe-ignored'
+		) {
+			submit_button( __( 'Permanently Delete All', 'tribe-ext-ea-additional-options' ), 'apply', 'delete_all', false );
+		}
 	}
 }

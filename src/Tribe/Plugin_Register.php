@@ -2,7 +2,7 @@
 /**
  * Handles the Extension plugin dependency manifest registration.
  *
- * @since __TRIBE_VERSION__
+ * @since 1.0.0
  *
  * @package Tribe\Extensions\EA_Additional_Options
  */
@@ -14,7 +14,7 @@ use Tribe__Abstract_Plugin_Register as Abstract_Plugin_Register;
 /**
  * Class Plugin_Register.
  *
- * @since   __TRIBE_VERSION__
+ * @since 1.0.0
  *
  * @package Tribe\Extensions\EA_Additional_Options
  *

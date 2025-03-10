@@ -87,6 +87,17 @@ class Options {
 		return $event;
 	}
 
+	/**
+	 * Adjust the time zone of imported events.
+	 *
+	 * @since 1.2.0
+	 * @since 1.5.0 Change the logic of checking the meridian.
+	 *
+	 * @param array $event The data of the imported event.
+	 * @param array $meta  Metadata of the imported event.
+	 *
+	 * @return mixed
+	 */
 	private function adjust_timezone( $event, $meta ) {
 		if ( ! empty( $event['EventAllDay'] ) && tribe_is_truthy( $event['EventAllDay'] ) ) {
 			$event['EventTimezone'] = $meta['timezone'];
@@ -119,20 +130,14 @@ class Options {
 			} else if ( $missing_event_details ) {
 				return $event;
 			} else {
-				// If there is a meridian and it's "pm" then adjust times.
-				if (
-					isset( $event['EventStartMeridian'] )
-					&& 'pm' === strtolower( $event['EventStartMeridian'] )
-					&& $event['EventStartHour'] < 12
-				) {
-					$event['EventStartHour'] += 12;
-				}
-				if (
-					isset( $event['EventEndMeridian'] )
-					&& 'pm' === strtolower( $event['EventEndMeridian'] )
-					&& $event['EventEndHour'] < 12
-				) {
-					$event['EventEndHour'] += 12;
+				// If there is a meridian, and it's "pm" then adjust times for 24h format.
+				if ( isset( $event['EventStartMeridian'] ) && isset( $event['EventEndMeridian'] ) ) {
+					if ( strtolower( $event['EventStartMeridian'] ) === 'pm' && $event['EventStartHour'] < 12 ) {
+						$event['EventStartHour'] += 12;
+					}
+					if ( strtolower( $event['EventEndMeridian'] ) === 'pm' && $event['EventEndHour'] < 12 ) {
+						$event['EventEndHour'] += 12;
+					}
 				}
 
 				$event['EventTimezone'] = str_replace( 'UTC', 'Etc/GMT', $event['EventTimezone'] );

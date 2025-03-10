@@ -8,12 +8,13 @@ class Single_Event_Template {
 		$template_setting     = tribe_get_option( Settings::PREFIX . 'default_template', false );
 		$block_editor_enabled = tribe_get_option( 'toggle_blocks_editor', null );
 
-		/** Make sure it only runs if:
+		/**
+		 * Make sure it only runs if:
 		 * 1. The block editor for events is enabled.
 		 * 2. A template is set up.
 		 */
 		if ( tribe_is_truthy( $block_editor_enabled ) && $template_setting ) {
-			add_filter( 'tribe_aggregator_event_translate_service_data_field_map', [ $this, 'adjust_field_map' ] );
+			add_filter( 'tribe_aggregator_event_translate_service_data_field_map', [ $this, 'adjust_field_map' ], 10, 2 );
 			add_filter( 'tribe_aggregator_before_save_event', [ $this, 'tec_ea_single_event_template' ], 11, 2 );
 		}
 	}
@@ -21,19 +22,24 @@ class Single_Event_Template {
 	/**
 	 * Adjust the field map.
 	 *
-	 * @param array $fieldMap The field map from the source to the event data.
+	 * @param array  $field_map The field map from the source to the event data.
+	 * @param object $item      Item being translated.
 	 *
 	 * @return array
 	 */
-	public function adjust_field_map( array $fieldMap ): array {
-		if ( isset( $fieldMap['description'] ) ) {
-			unset( $fieldMap['description'] );
+	public function adjust_field_map( array $field_map, object $item ): array {
+		if (
+			isset( $field_map['description'] )
+			&& isset( $item->unsafe_description )
+		) {
+			unset( $field_map['description'] );
+			$field_map['unsafe_description'] = 'post_content';
 		}
-		$fieldMap['unsafe_description'] = 'post_content';
-		$fieldMap['start_date_utc']     = 'EventUTCStartDate';
-		$fieldMap['end_date_utc']       = 'EventUTCEndDate';
 
-		return $fieldMap;
+		$field_map['start_date_utc'] = 'EventUTCStartDate';
+		$field_map['end_date_utc']   = 'EventUTCEndDate';
+
+		return $field_map;
 	}
 
 	/**
@@ -51,6 +57,7 @@ class Single_Event_Template {
 			'ical',
 			'gcal',
 			'ics',
+			'meetup',
 		];
 
 		/**
@@ -131,6 +138,19 @@ class Single_Event_Template {
 			$template = str_replace(
 				'<!-- wp:tribe/event-organizer /-->',
 				'<!-- wp:tribe/event-organizer {"organizer":' . $event['Organizer']['OrganizerID'][0] . '} /-->',
+				$template
+			);
+		}
+
+		// If there is a venue in the source, then change it in the template.
+		if (
+			! empty( $event['EventVenueID'] )
+			&& intval( $event['EventVenueID'] ) > 0
+			&& get_post_type( $event['EventVenueID'] ) === 'tribe_venue'
+		) {
+			$template = str_replace(
+				'<!-- wp:tribe/event-venue /-->',
+				'<!-- wp:tribe/event-venue {"venue":' . $event['EventVenueID'] . '} /-->',
 				$template
 			);
 		}

@@ -2,12 +2,22 @@
 
 namespace Tribe\Extensions\EA_Additional_Options\Modules;
 
+use TEC\Common\Admin\Entities\Div;
+use TEC\Common\Admin\Entities\Heading;
+use TEC\Common\Admin\Entities\Container;
+use TEC\Common\Admin\Entities\Field_Wrapper;
+use Tribe\Utils\Element_Classes as Classes;
+
 /**
  * Do the Settings.
+ *
+ * @since 1.0.0
  */
 class Settings {
 	/**
 	 * The Settings Helper class.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @var Settings_Helper
 	 */
@@ -15,6 +25,8 @@ class Settings {
 
 	/**
 	 * The prefix for our settings keys.
+	 *
+	 * @since 1.0.0
 	 *
 	 * @see get_options_prefix() Use this method to get this property's value.
 	 *
@@ -25,27 +37,73 @@ class Settings {
 	/**
 	 * Settings constructor.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param Settings_Helper $settings_helper
 	 */
 	public function __construct( Settings_Helper $settings_helper ) {
 		$this->settings_helper = $settings_helper;
 	}
 
+	/**
+	 * Running the hooks.
+	 *
+	 * @since 1.5.0 Updated filter for additional options settings and added a maintenance section.
+	 *
+	 * @return void
+	 */
 	public function hook() {
-		add_action( 'admin_init', [ $this, 'add_settings' ] );
+		add_filter( 'tec_events_settings_tab_imports_fields', [ $this, 'add_additional_options' ] );
+		add_filter( 'tribe_general_settings_maintenance_section', [ $this, 'add_maintenance_settings' ] );
 	}
 
 	/**
-	 * Adds a new section of fields to Events > Settings > General tab, appearing after the "Map Settings" section
-	 * and before the "Miscellaneous Settings" section.
+	 * Add the settings fields for the additional options.
 	 *
+	 * @since 1.0.0
+	 * @since 1.4.0 Added setting for Block editor template.
+	 * @since 1.5.0 Renamed from `add_settings`.
+	 *              Updated logic for the new admin UI.
+	 *
+	 * @param array $fields The fields for the imports settings tab.
+	 *
+	 * @return array
 	 */
-	public function add_settings() {
-		$fields = [
-			self::PREFIX . 'heading'                         => [
-				'type' => 'html',
-				'html' => '<h3>' . esc_html__( 'Additional Options', 'tribe-ext-ea-additional-options' ) . '</h3>',
-			],
+	public function add_additional_options( $fields ) {
+		$content_block          = new Div( new Classes( [ 'tec-settings-form__content-section' ] ) );
+		$section_header_classes = new Classes( [ 'tec-settings-form__section-header', 'tec-settings-form__section-header--sub' ] );
+
+		/**
+		 * Helper function for wrapping fields.
+		 *
+		 * This will take the container and an array of fields, and the fields will all be
+		 * wrapped in a Field_Wrapper object and added to the container.
+		 *
+		 * @since 1.5.0
+		 *
+		 * @param Container $container The container to add the fields to.
+		 * @param array     $fields    Array of field data.
+		 *
+		 * @return void
+		 */
+		$wrap_fields = function ( Container $container, array $fields ) {
+			foreach ( $fields as $field_id => $field ) {
+				$container->add_child(
+					new Field_Wrapper(
+						new \Tribe__Field(
+							$field_id,
+							$field
+						)
+					)
+				);
+			}
+		};
+
+		$additional_options = ( clone $content_block )->add_child(
+			new Heading( __( 'Additional Options', 'tribe-ext-ea-additional-options' ), 3, $section_header_classes ),
+		);
+
+		$fields_setup = [
 			self::PREFIX . 'delete_duplicate_removed_events' => [
 				'type'            => 'radio',
 				'label'           => esc_html__( 'Delete Duplicate/Removed Events for Scheduled Imports', 'tribe-ext-ea-additional-options' ),
@@ -105,15 +163,20 @@ class Settings {
 			],
 		];
 
-		$this->settings_helper->add_fields(
-			$fields, 'imports',
-			'tribe_aggregator_disable',
-			false
+		$wrap_fields(
+			$additional_options,
+			$fields_setup
 		);
+
+		$fields[] = $additional_options;
+
+		return $fields;
 	}
 
 	/**
-	 * Get all draft events to show them as options in the dropdown.
+	 * Get all draft events to show them as options in the Block editor template dropdown.
+	 *
+	 * @since 1.4.0
 	 *
 	 * @return array
 	 */
@@ -145,6 +208,8 @@ class Settings {
 	 * Retrieve the attributes for the setting.
 	 * If block editor for events is not enabled, then disable the field.
 	 *
+	 * @since 1.4.0
+	 *
 	 * @return array
 	 */
 	private function get_template_attributes(): array {
@@ -161,7 +226,10 @@ class Settings {
 	}
 
 	/**
-	 * Retrieve the description of the setting.
+	 * Retrieve the description of the Block editor template setting.
+	 *
+	 * @since 1.4.0
+	 * @since 1.5.0 Updated tooltip text and link for enabling the block editor.
 	 *
 	 * @return string
 	 */
@@ -187,12 +255,86 @@ class Settings {
 		} else {
 			$tooltip = sprintf(
 			/* translators: %1$s: opening anchor tag; %2$s: closing anchor tag */
-				esc_html__( 'Please enable the block editor for events under %1$sEvents > Settings > General%2$s to be able to use this feature.', 'tribe-ext-ea-additional-options' ),
-				'<a href="' . admin_url( 'edit.php?page=tec-events-settings&tab=general&post_type=tribe_events#tec-settings-general-editing' ) . '">',
+				esc_html__( 'Please enable the block editor for events under %1$sEvents > Settings > General > Editing%2$s to be able to use this feature.', 'tribe-ext-ea-additional-options' ),
+				'<a href="' . admin_url( 'edit.php?page=tec-events-settings&tab=general-editing-tab&post_type=tribe_events' ) . '">',
 				'</a>'
 			);
 		}
 
 		return $tooltip;
+	}
+
+	/**
+	 * Add the extension's settings to the Maintenance page at the right spot.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @param array $settings Array of settings.
+	 *
+	 * @return array
+	 */
+	public function add_maintenance_settings( array $settings ): array {
+		$new_settings = [];
+
+		foreach ( $settings as $key => $value ) {
+			$new_settings[ $key ] = $value;
+
+			if ( $key === 'trash-past-events' ) {
+				$new_settings = array_merge( $new_settings, $this->add_maintenance_settings_fields() );
+			}
+		}
+
+		return $new_settings;
+	}
+
+	/**
+	 * Compile new settings fields for the Maintenance tab.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return array
+	 */
+	public function add_maintenance_settings_fields(): array {
+		return [
+			self::PREFIX . 'ignore_range' => [
+				'type'            => 'dropdown',
+				'label'           => esc_html__( 'Delete ignored events older than', 'tec-labs-remove-past-ignored-events' ),
+				'tooltip'         => 'Ignored events that are more than this many days past will be permanently deleted.',
+				'validation_type' => 'options',
+				'size'            => 'small',
+				'default'         => null,
+				'options' => [
+					0  => esc_html__( 'Disabled', 'tec-labs-remove-past-ignored-events' ),
+					1  => esc_html__( '1 day', 'tec-labs-remove-past-ignored-events' ),
+					7  => esc_html__( '7 days', 'tec-labs-remove-past-ignored-events' ),
+					14 => esc_html__( '14 days', 'tec-labs-remove-past-ignored-events' ),
+					30 => esc_html__( '30 days', 'tec-labs-remove-past-ignored-events' ),
+				],
+			],
+
+			self::PREFIX . 'ignore_limit' => [
+				'type'            => 'text',
+				'label'           => esc_html__( 'Ignored events deleted in one run', 'tec-labs-remove-past-ignored-events' ),
+				'tooltip'         => 'The number of ignored events that will be permanently deleted in one cron run. Note, setting this too high could exhaust server resources.',
+				'validation_type' => 'positive_int',
+				'size'            => 'small',
+				'default'         => '15',
+			],
+
+			self::PREFIX . 'ignore_schedule' => [
+				'type'            => 'dropdown',
+				'label'           => esc_html__( 'Cron schedule', 'tec-labs-remove-past-ignored-events' ),
+				'tooltip'         => 'A batch of ignored events will be deleted this often.',
+				'validation_type' => 'options',
+				'size'            => 'small',
+				'default'         => 'daily',
+				'options'         => [
+					'hourly'     => esc_html__( 'Hourly', 'tec-labs-remove-past-ignored-events' ),
+					'twicedaily' => esc_html__( 'Twice a day', 'tec-labs-remove-past-ignored-events' ),
+					'daily'      => esc_html__( 'Daily', 'tec-labs-remove-past-ignored-events' ),
+					'weekly'     => esc_html__( 'Weekly', 'tec-labs-remove-past-ignored-events' ),
+				],
+			],
+		];
 	}
 }
