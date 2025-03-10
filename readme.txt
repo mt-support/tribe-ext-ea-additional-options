@@ -1,5 +1,5 @@
 === Event Aggregator Extension: Additional Options ===
-Contributors: theeventscalendar, aguseo
+Contributors: theeventscalendar, codingmusician, aguseo
 Donate link: https://evnt.is/29
 Tags: events, calendar
 Requires at least: 6.3
